@@ -1,0 +1,279 @@
+.root {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+.menus-tab {
+  display: block;
+  text-align: center;
+}
+.menus-tab :first-child {
+  margin-top: 8px;
+}
+
+.btn {
+  position: relative;
+  display: inline-block;
+  font-weight: bold;
+  padding: 0.25em 0.5em;
+  text-decoration: none;
+  cursor: pointer;
+
+  &.blue {
+    color: #fff;
+    background: #1153bf;
+    transition: 0.1s;
+    &:hover {
+      background: #3566b7;
+    }
+  }
+
+  &.in-menu-tab {
+    width: 80%;
+    margin-bottom: 5px;
+    font-size: 80%;
+  }
+  &.for-operation {
+    display: inline-block;
+    font-size: 80%;
+  }
+}
+
+.main-content {
+  position: absolute;
+  overflow-y: scroll;
+}
+.main-content::-webkit-scrollbar {
+  width: 14px;
+}
+.main-content::-webkit-scrollbar-track {
+  background-color: lightgray;
+}
+.main-content::-webkit-scrollbar-thumb {
+  background-color: gray;
+  border-radius: 5px;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.3);
+}
+.info-table-root {
+  overflow-x: scroll;
+  overflow-y: scroll;
+  display: inline-block;
+  max-width: 100%;
+  max-height: 100%;
+
+  &::-webkit-scrollbar {
+    height: 14px;
+  }
+  &::-webkit-scrollbar-track {
+    background-color: lightgray;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: gray;
+    border-radius: 5px;
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.3);
+  }
+  .wrapper-height-to-be-fixed {
+    display: inline-block;
+    max-width: 10000px;
+  }
+  .table {
+    border-collapse: collapse;
+    max-width: 100%;
+    td {
+      border-left: solid 1px #c4c4c4;
+      border-right: solid 1px #c4c4c4;
+      border-bottom: solid 2px #000000;
+      padding-left: 6px;
+      padding-right: 12px;
+      white-space: nowrap;
+      height: 30px;
+    }
+  }
+  .header-table {
+    position: relative;
+    z-index: 30;
+    td {
+      border-top: solid 2px #000000;
+      background-color: #abfcfc;
+    }
+  }
+  .info-table {
+    position: relative;
+    top: -33px;
+  }
+  .nested {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border-left: #000000 1px solid;
+  }
+}
+
+.switch-area {
+  line-height: 24px; /* 1行の高さ          */
+  letter-spacing: 0; /* 文字間             */
+  text-align: center; /* 文字位置は中央     */
+  font-size: 9px; /* 文字サイズ         */
+
+  position: relative; /* 親要素が基点       */
+  margin: auto; /* 中央寄せ           */
+  width: 49px; /* ボタンの横幅       */
+  background: #fff; /* デフォルト背景色   */
+
+  cursor: pointer;
+
+  /* === チェックボックスのラベル（標準） ==================== */
+  span {
+    display: block; /* ボックス要素に変更 */
+    box-sizing: border-box; /* 枠線を含んだサイズ */
+    height: 24px; /* ボタンの高さ       */
+    border: 2px solid #999999; /* 未選択タブのの枠線 */
+    border-radius: 12px; /* 角丸               */
+  }
+
+  /* === チェックボックスのラベル（ONのとき） ================ */
+  &.on span {
+    border-color: #0059b3; /* 選択タブの枠線     */
+  }
+
+  /* === 表示する文字（標準） ================================ */
+  span {
+    padding: 0 0 0 14px; /* 表示する位置       */
+    color: #999999; /* 文字色             */
+  }
+
+  /* === 表示する文字（ONのとき） ============================ */
+  &.on span {
+    padding: 0 14px 0 0; /* 表示する位置       */
+    color: #0059b3; /* 文字色             */
+  }
+
+  /* === 丸部分のSTYLE（標準） =============================== */
+  div {
+    position: absolute; /* 親要素からの相対位置*/
+    width: 16px; /* 丸の横幅           */
+    height: 16px; /* 丸の高さ           */
+    background: #999999; /* カーソルタブの背景 */
+    top: 4px; /* 親要素からの位置   */
+    left: 4px; /* 親要素からの位置   */
+    border-radius: 8px; /* 角丸               */
+    transition: 0.2s; /* 滑らか変化         */
+  }
+
+  /* === 丸部分のSTYLE（ONのとき） =========================== */
+  &.on div {
+    transform: translateX(25px); /* 丸も右へ移動       */
+    background: #0059b3; /* カーソルタブの背景 */
+  }
+}
+
+.modal-root {
+  $root-top: 40px;
+  $root-left: 50px;
+
+  position: fixed;
+  top: $root-top;
+  left: $root-left;
+  width: calc(100% - #{$root-left});
+  height: calc(100% - #{$root-top});
+
+  .modal-back {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 10;
+    background-color: lightgray;
+    opacity: 0.9;
+    width: 100%;
+    height: 100%;
+  }
+
+  .centering {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: calc(100% - 40px);
+  }
+
+  .group {
+    //position: absolute;
+    //top: 50%;
+    //left: 50%;
+    //transform: translateY(-50%) translateX(-50%);
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    margin: auto;
+    width: 80%;
+    height: 3.2rem;
+  }
+
+  .modal-area {
+    $margin-left-right: 20px;
+    position: relative;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    z-index: 25;
+    width: calc(100% - #{$margin-left-right} * 2);
+    left: $margin-left-right;
+    height: 100%;
+  }
+
+  .modal-title {
+    position: relative;
+    background-color: #0059b3;
+    color: white;
+  }
+
+  .modal-main-frame {
+    position: relative;
+    overflow: scroll scroll;
+    max-height: calc(100% - 80px);
+
+    &::-webkit-scrollbar {
+      height: 14px;
+    }
+    &::-webkit-scrollbar-track {
+      background-color: lightgray;
+    }
+    &::-webkit-scrollbar-thumb {
+      background-color: gray;
+      border-radius: 5px;
+      box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.3);
+    }
+  }
+
+  .modal-main {
+    background-color: white;
+    padding: 20px;
+  }
+}
+
+.messages {
+  background-color: red;
+  transition: background-color 0.5s cubic-bezier(0.455, 0.03, 0.515, 0.955) 0s,
+    height 0.2s cubic-bezier(0.455, 0.03, 0.515, 0.955) 0s;
+
+  &.thin {
+    background-color: #e48181;
+  }
+}
+
+.loading-screen {
+  $root-top: 40px;
+  $root-left: 50px;
+
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
+  z-index: 50;
+  background-color: gray;
+  opacity: 0.5;
+}
