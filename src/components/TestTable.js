@@ -277,6 +277,7 @@ class TestTable extends Component {
   render() {
     let checkClosedMode = false;
     let parentNest = null;
+    let headerRowDom;
 
     return (
       <div className="info-table-root" ref={this.scrollableNode}>
@@ -307,11 +308,14 @@ class TestTable extends Component {
                             "" + this.state.headerWidthList[idx] + "px"
                         }}
                       >
+                        {/* content in td should be same as main table's first row
+                          so that header row's width and height can be calculated properly */}
                         {col}
                       </td>
                     );
                   })}
                 </tr>
+                )}
               </tbody>
             </table>
 
@@ -325,11 +329,14 @@ class TestTable extends Component {
               style={{ borderCollapse: "collapse" }}
             >
               <tbody>
-                {/* area of dummy header row : needed to automatically adjusting width by browser */}
+                {/* area of dummy row : needed so that header table's row can have proper width and height, and 
+                so that header table's row hide perfectly main table's dummy row below  */}
                 <tr>
                   {eachWithIndex(this.props.columns, (col, idx) => {
                     return (
-                      <td key={"" + idx} className={`header-column-dummy`}>
+                      <td key={"" + idx} className="header-column-dummy">
+                        {/* content in td should be same as header table's row
+                          so that header row's width and height can be calculated properly */}
                         {col}
                       </td>
                     );
