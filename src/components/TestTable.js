@@ -46,11 +46,12 @@ class TestTable extends Component {
     /* needed to fix height of inner content */
     this.flexibleInnerNode = React.createRef();
 
-    this.scrollDebounce = debounce(200, () => {
-      this.setState({
-        scrollTop: this.scrollableNode.current.scrollTop
-      });
-    });
+    //this.scrollDebounce = debounce(200, () => {
+    //  this.setState({
+    //    scrollTop: this.scrollableNode.current.scrollTop
+    //  });
+    //});
+    this.setScrollTopStart();
     this.adjustHeaderCellsWidthThrottle = throttle(60, () => {
       this.adjustHeaderCellsWidth();
     });
@@ -88,6 +89,22 @@ class TestTable extends Component {
       this.adjustFixedHeight();
     }
   }
+  setScrollTopStart() {
+    this.setVariableHeightController = runWithInterval(500, resolve => {
+      retryWithWait(50, 500, () => this.scrollableNode.current.scrollTop).then(
+        current => {
+          if (this.state.scrollTop !== current) {
+            this.setState({
+              scrollTop: current
+            });
+          }
+
+          resolve();
+        }
+      );
+    });
+  }
+
   debugTime() {
     let cur = new Date();
     return cur.getTime() - this.debugStartDate.getTime();
@@ -262,11 +279,7 @@ class TestTable extends Component {
     let parentNest = null;
 
     return (
-      <div
-        className="info-table-root"
-        onScroll={this.scrollDebounce}
-        ref={this.scrollableNode}
-      >
+      <div className="info-table-root" ref={this.scrollableNode}>
         <div
           className="wrapper-height-to-be-fixed"
           style={{
