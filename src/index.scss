@@ -99,9 +99,13 @@
       background-color: #abfcfc;
     }
   }
+  .overlay-for-dummy-header-row {
+    position: relative;
+    z-index: 20;
+    background-color: gray;
+  }
   .info-table {
     position: relative;
-    top: -33px;
   }
   .nested {
     display: inline-block;

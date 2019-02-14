@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import TestTable from "./TestTable";
+import DataTable from "./Parts/DataTable";
 import {
   getRandomInt,
   retryWithWait,
@@ -165,7 +165,7 @@ class Home extends Component {
             width: "100%"
           }}
         >
-          <TestTable
+          <DataTable
             rows={this.state.tableRows}
             columns={this.state.tableColumns}
             editable={this.state.tableEditable}
