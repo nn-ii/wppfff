@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { throttle, debounce } from "throttle-debounce";
 import {
   eachWithIndex,
+  eachWithIndexNotMap,
   commonGetDerivedStateFromProps,
   withoutPx,
   cloneObjectSimple,
@@ -44,11 +45,11 @@ class DataTable extends Component {
     /* refs */
     this.scrollableNode = React.createRef();
     this.flexibleInnerNode = React.createRef();
-    this.headerRowNode = React.createRef();
+    this.headerTableNode = React.createRef();
     this.dummyHeaderRowNode = React.createRef();
 
     /* func ref : Header object set its function, and later DataTable object run it */
-    this.funcRefToCalcEachWidth = { func: null };
+    this.funcRefToGetStyleInfo = { func: null };
 
     this.setScrollTopStart();
     this.adjustHeaderRelatedValuesThrottle = throttle(500, () => {
@@ -63,12 +64,14 @@ class DataTable extends Component {
       /* null check is needed : typeof null will be 'object' */
       return null;
     } else if (typeof ret === "object") {
+      if (nextProps.columns !== prevState.importantPropsSnapshot.columns) {
+        ret.headerHeight = 0;
+      }
       return Object.assign(ret, {
         closedParent: {},
         fixedHeight: null,
         headerCellsWidthList: [],
         headerWidth: 0,
-        headerHeight: 0,
         lockForAdjustFixedHeight: true,
 
         /* normally can use `this` insetead of self class name in static methods,
@@ -117,7 +120,7 @@ class DataTable extends Component {
   }
 
   componentDidUpdate() {
-    // 1. adjusting header cells' width, and row's width and height
+    // 1. adjusting header cells' width, and rows' width and height
     this.adjustHeaderRelatedValuesThrottle();
 
     // 2. adjusting height (fixed) of outer of table
@@ -180,9 +183,7 @@ class DataTable extends Component {
   };
 
   toggleTree(row_i) {
-    console.log(row_i);
-    /* if using babel-polyfill, we can use Object.assign */
-    let closedParent = cloneObjectSimple(this.state.closedParent);
+    let closedParent = Object.assign({}, this.state.closedParent);
 
     if (row_i in closedParent) {
       delete closedParent[row_i];
@@ -193,40 +194,49 @@ class DataTable extends Component {
   }
 
   adjustHeaderRelatedValues() {
-    retryWithWait(50, 500, () => [
-      this.headerRowNode.current.children,
-      this.dummyHeaderRowNode.current.children
-    ]).then(values => {
+    if (typeof this.funcRefToGetStyleInfo.func !== "function") {
+      return;
+    }
+
+    Promise.all([
+      retryWithWait(50, 500, () =>
+        document.defaultView.getComputedStyle(this.headerTableNode.current)
+      ),
+      this.funcRefToGetStyleInfo.func()
+    ]).then(list => {
+      let headerTableStyle = list[0];
+      let info = list[1];
+
       let willBeMerged = {};
 
-      let cells = values[0];
-      let dummyCells = values[1];
-      if (dummyCells.length === 0) {
-        return;
-      }
-
-      let dummyRow = dummyCells[0].parentNode;
+      let widthList = info.widthList;
 
       let anyWidthChanged = false;
-      let widthIntegers = [];
-      for (let i = 0; i < cells.length; i++) {
-        widthIntegers[i] = this.calculateWidthToSet(dummyCells[i], cells[i]);
-        if (this.state.headerCellsWidthList[i] !== widthIntegers[i]) {
-          anyWidthChanged = true;
-        }
-      }
+      eachWithIndexNotMap(widthList, (row, rowIndex) => {
+        eachWithIndexNotMap(row, (col, colIndex) => {
+          if (this.state.headerCellsWidthList[rowIndex]) {
+            if (this.state.headerCellsWidthList[rowIndex][colIndex] !== col) {
+              anyWidthChanged = true;
+            }
+          } else {
+            anyWidthChanged = true;
+          }
+        });
+      });
       if (anyWidthChanged) {
-        willBeMerged.headerCellsWidthList = widthIntegers;
+        willBeMerged.headerCellsWidthList = widthList;
       }
 
+      /*
       let dummyRowStyle = document.defaultView.getComputedStyle(dummyRow);
-      let rowHeight = dummyRowStyle.height;
-      if (rowHeight !== this.state.headerHeight) {
-        willBeMerged.headerHeight = withoutPx(rowHeight);
+      let rowHeight = dummyRowStyle.height; */
+      let headerTableHeight = withoutPx(headerTableStyle.height);
+      if (headerTableHeight !== this.state.headerHeight) {
+        willBeMerged.headerHeight = headerTableHeight;
       }
-      let rowWidth = dummyRowStyle.width;
-      if (rowWidth !== this.state.headerWidth) {
-        willBeMerged.headerWidth = withoutPx(rowWidth);
+
+      if (info.headerWidth !== this.state.headerWidth) {
+        willBeMerged.headerWidth = info.headerWidth;
       }
 
       /* if do not check if some changed and always do this.setState, then
@@ -358,12 +368,11 @@ class DataTable extends Component {
             <table
               className="table header-table"
               style={{ top: this.state.scrollTop }}
-              ref={this.headerRowNode}
+              ref={this.headerTableNode}
             >
               <tbody>
                 <Header
                   columns={this.props.columns}
-                  tdClassName="header-column"
                   widthList={this.state.headerCellsWidthList}
                 />
 
@@ -409,8 +418,7 @@ class DataTable extends Component {
                 : the cells' width and row's height will be set to some state */}
                 <Header
                   columns={this.props.columns}
-                  tdClassName="header-column-dummy"
-                  funcRefToCalcEachWidth={this.funcRefToCalcEachWidth}
+                  funcRefToGetStyleInfo={this.funcRefToGetStyleInfo}
                 />
 
                 {/*

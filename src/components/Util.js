@@ -5,6 +5,13 @@ export const eachWithIndex = (ary, func) => {
   });
 };
 
+export const eachWithIndexNotMap = (ary, func) => {
+  let idx = 0;
+  return ary.forEach(item => {
+    return func(item, idx++);
+  });
+};
+
 export const getRandomInt = max => {
   return Math.floor(Math.random() * Math.floor(max));
 };

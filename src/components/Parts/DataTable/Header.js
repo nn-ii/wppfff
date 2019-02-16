@@ -2,8 +2,11 @@ import React, { Component } from "react";
 
 import {
   eachWithIndex,
+  eachWithIndexNotMap,
   commonGetDerivedStateFromProps,
-  nTimes
+  nTimes,
+  withoutPx,
+  retryWithWait
 } from "../../Util";
 
 class Header extends Component {
@@ -11,12 +14,14 @@ class Header extends Component {
     super();
     this.state = {
       version: 0,
-      importantPropsSnapshot: { columns: null, funcRefToCalcEachWidth: null },
+      importantPropsSnapshot: { columns: null, funcRefToGetStyleInfo: null },
 
-      /* calcEachWidth func need to be followed from state 
+      /* getStyleInfo func need to be followed from state
          so that static `getDerivedStateFromProps` can follow the func */
-      funcToCalcEachWidth: () => this.calcEachWidth()
+      funcToGetStyleInfo: () => this.getStyleInfo()
     };
+
+    this.firstTrNodeRef = React.createRef();
 
     //console.log("createCellmap!");
 
@@ -45,8 +50,12 @@ class Header extends Component {
       /* null check is needed : typeof null will be 'object' */
       return null;
     } else if (typeof ret === "object") {
-      if (typeof nextProps.funcRefToCalcEachWidth === "object") {
-        nextProps.funcRefToCalcEachWidth.func = prevState.funcToCalcEachWidth;
+      if (
+        nextProps.funcRefToGetStyleInfo &&
+        nextProps.funcRefToGetStyleInfo !==
+          prevState.importantPropsSnapshot.funcRefToGetStyleInfo
+      ) {
+        nextProps.funcRefToGetStyleInfo.func = prevState.funcToGetStyleInfo;
       }
       return Object.assign(ret, {
         cellMap: Header.createCellMap(nextProps.columns)
@@ -258,26 +267,72 @@ class Header extends Component {
     return undefined;
   }
 
-  calcEachWidth() {
-    //console.log('calcEachWidth CALLED!!', this.state)
+  getStyleInfo() {
+    // return Promise
+    return retryWithWait(50, 500, () => this.getStyleInfoRun());
+  }
+
+  getStyleInfoRun() {
+    // return width of header cells whose descendantLastItemsCount === 0
+
+    let ret = {};
+    let firstTrNode = this.firstTrNodeRef.current;
+    let firstTrStyle = document.defaultView.getComputedStyle(firstTrNode);
+
+    ret.headerWidth = withoutPx(firstTrStyle.width);
+
+    let parentNode = firstTrNode.parentNode;
+    let children = parentNode.childNodes;
+    let firstTrIndex = -1;
+    for (let i = 0; i < children.length; i++) {
+      if (children[i] === firstTrNode) {
+        firstTrIndex = i;
+        break;
+      }
+    }
+    if (firstTrIndex === -1) {
+      throw "Not found row";
+    }
+
+    let widthList = [];
+    eachWithIndexNotMap(this.state.cellMap, (row, rowIndex) => {
+      widthList.push([]);
+      eachWithIndexNotMap(row, (col, colIndex) => {
+        if (
+          col.descendantLastItemsCount === undefined ||
+          col.descendantLastItemsCount === 0
+        ) {
+          widthList[rowIndex][colIndex] = withoutPx(
+            document.defaultView.getComputedStyle(
+              children[firstTrIndex + rowIndex].childNodes[colIndex]
+            ).width
+          );
+        } else {
+          widthList[rowIndex][colIndex] = null;
+        }
+      });
+    });
+
+    ret.widthList = widthList;
+    return ret;
   }
 
   render() {
-    //console.log("HOGE", this.state.cellMap);
     return eachWithIndex(this.state.cellMap, (row, rowIdx) => {
       return (
-        <tr key={rowIdx}>
+        <tr key={rowIdx} ref={rowIdx === 0 && this.firstTrNodeRef}>
           {eachWithIndex(row, (col, idx) => {
-            let width = this.constructor.calcCellWidth(
-              col,
-              idx,
-              this.props.widthList
-            );
             return (
               <td
                 key={idx}
                 className={this.props.tdClassName}
-                style={{ width: width }}
+                style={{
+                  width:
+                    this.props.widthList &&
+                    this.props.widthList[rowIdx] &&
+                    typeof this.props.widthList[rowIdx][idx] === "number" &&
+                    `${this.props.widthList[rowIdx][idx]}px`
+                }}
                 colSpan={col.descendantLastItemsCount}
                 rowSpan={col.rowSpan}
               >

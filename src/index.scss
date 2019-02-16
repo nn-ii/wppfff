@@ -84,7 +84,7 @@
     td {
       border-left: solid 1px #c4c4c4;
       border-right: solid 1px #c4c4c4;
-      border-bottom: solid 2px #000000;
+      border-bottom: solid 1px #c4c4c4;
       padding-left: 6px;
       padding-right: 12px;
       white-space: nowrap;
@@ -95,8 +95,8 @@
     position: relative;
     z-index: 30;
     td {
-      border-top: solid 2px #000000;
-      background-color: #abfcfc;
+      background-color: #0059b3;
+      color: white;
     }
   }
   .overlay-for-dummy-header-row {
