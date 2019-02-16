@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { throttle, debounce } from "throttle-debounce";
 import {
   eachWithIndex,
+  mapWithIndex,
   eachWithIndexNotMap,
   commonGetDerivedStateFromProps,
   withoutPx,
@@ -57,6 +58,8 @@ class DataTable extends Component {
     });
 
     this.debugStartDate = new Date();
+
+    setTimeout(() => this.toggleSorting(4), 3000);
   }
   static getDerivedStateFromProps(nextProps, prevState) {
     let ret = commonGetDerivedStateFromProps(nextProps, prevState);
@@ -73,6 +76,9 @@ class DataTable extends Component {
         headerCellsWidthList: [],
         headerWidth: 0,
         lockForAdjustFixedHeight: true,
+        sorted: null,
+        sortReversed: null,
+        sortColumnIndex: null,
 
         /* normally can use `this` insetead of self class name in static methods,
          but here can't probably because there is React restriction or so */
@@ -345,6 +351,53 @@ class DataTable extends Component {
     monitor(); */
   }
 
+  setSortedState(colIndex, toReverse) {
+    let rev = 1;
+    if (toReverse) {
+      rev = -1;
+    }
+
+    let orderList = mapWithIndex(this.props.rows, (row, rowIndex) => ({
+      rowIndex: rowIndex,
+      data: row.data
+    })).sort((a, b) => {
+      if (a.data[colIndex] > b.data[colIndex]) {
+        return 1 * rev;
+      } else if (a.data[colIndex] < b.data[colIndex]) {
+        return -1 * rev;
+      } else if (a.rowIndex > b.rowIndex) {
+        return 1;
+      } else if (a.rowIndex < b.rowIndex) {
+        return -1;
+      } else {
+        return 0;
+      }
+    });
+    orderList = orderList.map(i => {
+      return i.rowIndex;
+    });
+    console.log("JPJP", colIndex, orderList);
+
+    this.setState({
+      sorted: orderList,
+      sortReversed: toReverse || false,
+      sortColumnIndex: colIndex
+    });
+  }
+  toggleSorting(colIndex) {
+    if (this.state.sorted === null) {
+      this.setSortedState(colIndex, false);
+    } else if (this.state.sortColumnIndex === colIndex) {
+      if (this.state.sortReversed === false) {
+        this.setSortedState(colIndex, true);
+      } else {
+        this.setState({ sorted: null, sortReversed: null });
+      }
+    } else {
+      this.setSortedState(colIndex, false);
+    }
+  }
+
   render() {
     let checkClosedMode = false;
     let parentNest = null;
@@ -436,37 +489,48 @@ class DataTable extends Component {
                 */}
 
                 {/* main data */}
-                {eachWithIndex(this.props.rows, (r, row_i) => {
-                  let setting = this.calcRowSetting(
-                    checkClosedMode,
-                    parentNest,
-                    r.nest,
-                    row_i
-                  );
+                {(() => {
+                  let func = (r, row_i) => {
+                    let setting = this.calcRowSetting(
+                      checkClosedMode,
+                      parentNest,
+                      r.nest,
+                      row_i
+                    );
 
-                  // set for next loop
-                  checkClosedMode = setting.nextCheckClosedMode;
-                  parentNest = setting.nextParentNest;
+                    // set for next loop
+                    checkClosedMode = setting.nextCheckClosedMode;
+                    parentNest = setting.nextParentNest;
 
-                  return (
-                    <DataRow
-                      key={row_i}
-                      index={row_i}
-                      isClosed={setting.isClosed}
-                      isParentOfClosed={setting.isParentOfClosed}
-                      cells={r.data}
-                      nest={r.nest}
-                      nextNest={
-                        this.props.rows[row_i + 1] &&
-                        this.props.rows[row_i + 1].nest
-                      }
-                      editableIndex={this.state.editableIndex}
-                      inputSpaceIndex={this.state.inputSpaceIndex}
-                      pageVersion={this.state.version}
-                      toggleTreeFunc={rowIndex => this.toggleTree(rowIndex)}
-                    />
-                  );
-                })}
+                    return (
+                      <DataRow
+                        key={row_i}
+                        isClosed={setting.isClosed}
+                        isParentOfClosed={setting.isParentOfClosed}
+                        cells={r.data}
+                        nest={r.nest}
+                        nextNest={
+                          this.props.rows[row_i + 1] &&
+                          this.props.rows[row_i + 1].nest
+                        }
+                        editableIndex={this.state.editableIndex}
+                        inputSpaceIndex={this.state.inputSpaceIndex}
+                        pageVersion={this.state.version}
+                        toggleTreeFunc={rowIndex => this.toggleTree(rowIndex)}
+                        toggleSortingFunc={colIndex =>
+                          this.toggleSorting(colIndex)
+                        }
+                      />
+                    );
+                  };
+                  if (this.state.sorted) {
+                    return this.state.sorted.map(i =>
+                      func(this.props.rows[i], i)
+                    );
+                  } else {
+                    return eachWithIndex(this.props.rows, func);
+                  }
+                })()}
               </tbody>
             </table>
           </div>

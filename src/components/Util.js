@@ -5,6 +5,13 @@ export const eachWithIndex = (ary, func) => {
   });
 };
 
+export const mapWithIndex = (ary, func) => {
+  let idx = 0;
+  return ary.map(item => {
+    return func(item, idx++);
+  });
+};
+
 export const eachWithIndexNotMap = (ary, func) => {
   let idx = 0;
   return ary.forEach(item => {

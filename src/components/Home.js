@@ -41,10 +41,10 @@ class Home extends Component {
         { nest: 1, data: ["ID1", 3, 4, null] }
       ];
       this.setState({ tableRows: rows });
-    }, 1000);
+    }, 500);
     setTimeout(() => {
       let rows = [];
-      rows.push({ nest: 0, data: ["ID0", 3, 4, 5] });
+      rows.push({ nest: 0, data: ["ID0", 3, 4, 5, 0] });
 
       let prevNest = 0;
       while (rows.length < 30) {
@@ -52,11 +52,14 @@ class Home extends Component {
         if (nest === prevNest) {
           nest = prevNest + 1;
         }
-        rows.push({ nest: nest, data: ["ID" + rows.length, 3, 4, 5] });
+        rows.push({
+          nest: nest,
+          data: ["ID" + rows.length, 3, 4, 5, getRandomInt(100)]
+        });
         prevNest = nest;
       }
       this.setState({ tableRows: rows });
-    }, 3000);
+    }, 600);
   }
   onSearch() {
     let url =
