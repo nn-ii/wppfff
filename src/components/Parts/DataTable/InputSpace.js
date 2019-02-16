@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { castForEditing, commonGetDerivedStateFromProps } from "../../Util";
 
-class InputSpace extends React.Component {
+class InputSpace extends Component {
   constructor(props) {
     super();
     this.state = {

@@ -137,3 +137,9 @@ export const runWithInterval = (setting, promiseSource) => {
 
   return { clear: clearFunc };
 };
+
+export const nTimes = (n, func) => {
+  for (let i = 0; i < n; i++) {
+    func(i);
+  }
+};

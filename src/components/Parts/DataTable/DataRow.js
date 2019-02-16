@@ -13,8 +13,6 @@ class DataRow extends Component {
   }
 
   render() {
-    console.log("AAA", this.props);
-
     return (
       <tr style={{ display: this.props.isClosed && "none" }}>
         {eachWithIndex(this.props.cells, (c, i) => {

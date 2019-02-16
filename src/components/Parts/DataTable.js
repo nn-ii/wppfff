@@ -9,6 +9,7 @@ import {
   runWithInterval
 } from "../Util";
 import DataRow from "./DataTable/DataRow";
+import Header from "./DataTable/Header";
 
 class DataTable extends Component {
   constructor() {
@@ -45,6 +46,9 @@ class DataTable extends Component {
     this.flexibleInnerNode = React.createRef();
     this.headerRowNode = React.createRef();
     this.dummyHeaderRowNode = React.createRef();
+
+    /* func ref : Header object set its function, and later DataTable object run it */
+    this.funcRefToCalcEachWidth = { func: null };
 
     this.setScrollTopStart();
     this.adjustHeaderRelatedValuesThrottle = throttle(500, () => {
@@ -154,18 +158,22 @@ class DataTable extends Component {
 
   static createEditableIndex = props => {
     let ret = [];
-    for (let i = 0; i < props.columns.length; i++) {
-      if (props.editable.includes(props.columns[i])) {
-        ret.push(i);
+    if (Array.isArray(props.editableIndices)) {
+      for (let i = 0; i < props.columns.length; i++) {
+        if (props.editableIndices.includes(props.columns[i])) {
+          ret.push(i);
+        }
       }
     }
     return ret;
   };
   static createInputSpaceIndex = props => {
     let ret = [];
-    for (let i = 0; i < props.columns.length; i++) {
-      if (props.inputSpace.includes(props.columns[i])) {
-        ret.push(i);
+    if (Array.isArray(props.inputSpaceIndices)) {
+      for (let i = 0; i < props.columns.length; i++) {
+        if (props.inputSpaceIndices.includes(props.columns[i])) {
+          ret.push(i);
+        }
       }
     }
     return ret;
@@ -350,8 +358,16 @@ class DataTable extends Component {
             <table
               className="table header-table"
               style={{ top: this.state.scrollTop }}
+              ref={this.headerRowNode}
             >
               <tbody>
+                <Header
+                  columns={this.props.columns}
+                  tdClassName="header-column"
+                  widthList={this.state.headerCellsWidthList}
+                />
+
+                {/*
                 <tr ref={this.headerRowNode}>
                   {eachWithIndex(this.props.columns, (col, idx) => {
                     return (
@@ -364,12 +380,14 @@ class DataTable extends Component {
                             "" + this.state.headerCellsWidthList[idx] + "px"
                         }}
                       >
-                        {/* Each cell's content should be same between real header row and dummy header row */}
+                        {/* Each cell's content should be same between real header row and dummy header row */
+                /*}
                         {col}
                       </td>
                     );
                   })}
                 </tr>
+                */}
               </tbody>
             </table>
 
@@ -389,16 +407,25 @@ class DataTable extends Component {
               <tbody>
                 {/* First row is dummy header row
                 : the cells' width and row's height will be set to some state */}
+                <Header
+                  columns={this.props.columns}
+                  tdClassName="header-column-dummy"
+                  funcRefToCalcEachWidth={this.funcRefToCalcEachWidth}
+                />
+
+                {/*
                 <tr ref={this.dummyHeaderRowNode}>
                   {eachWithIndex(this.props.columns, (col, idx) => {
                     return (
                       <td key={"" + idx} className="header-column-dummy">
-                        {/* Each cell's content should be same between real header row and dummy header row */}
-                        {col}
+                        {/* Each cell's content should be same between real header row and dummy header row */
+                /*}
+                        {col && "SSS"}
                       </td>
                     );
                   })}
                 </tr>
+                */}
 
                 {/* main data */}
                 {eachWithIndex(this.props.rows, (r, row_i) => {

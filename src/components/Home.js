@@ -13,9 +13,14 @@ class Home extends Component {
     super();
     this.state = {
       tableRows: [],
-      tableColumns: ["id", "xxxxxxxxxxxxxxxxxxxxxx", "editable", "input"],
-      tableEditable: ["editable"],
-      tableInputSpace: ["input"],
+      tableColumns: [
+        "id",
+        { self: "AAA", children: ["PPP", "QQQQ"] },
+        "editable",
+        "input"
+      ],
+      //tableEditable: ["editable"],
+      //tableInputSpace: ["input"],
       variableHeight: 0,
       loading: false
     };
@@ -168,8 +173,8 @@ class Home extends Component {
           <DataTable
             rows={this.state.tableRows}
             columns={this.state.tableColumns}
-            editable={this.state.tableEditable}
-            inputSpace={this.state.tableInputSpace}
+            editableIndices={this.state.tableEditable}
+            inputSpaceIndices={this.state.tableInputSpace}
           />
         </div>
       </div>
