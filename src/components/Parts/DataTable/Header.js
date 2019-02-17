@@ -328,6 +328,25 @@ class Header extends Component {
       return (
         <tr key={rowIdx} ref={rowIdx === 0 && this.firstTrNodeRef}>
           {eachWithIndex(row, (col, idx) => {
+            let sortButton, keyToCheck;
+            if (typeof col.id === "string") {
+              keyToCheck = col.id;
+            } else if (typeof col.value === "string") {
+              keyToCheck = col.value;
+            }
+            if (
+              this.props.sortableIndices &&
+              this.props.sortableIndices.includes(keyToCheck)
+            ) {
+              sortButton = (
+                <button
+                  onClick={() => this.props.whenSortButtonClick(keyToCheck)}
+                >
+                  SORT
+                </button>
+              );
+            }
+
             return (
               <td
                 key={idx}
@@ -343,6 +362,7 @@ class Header extends Component {
                 rowSpan={col.rowSpan}
               >
                 {col.value}
+                {sortButton}
               </td>
             );
           })}

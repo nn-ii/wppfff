@@ -57,9 +57,8 @@ class DataTable extends Component {
     });
 
     this.debugStartDate = new Date();
-
-    setTimeout(() => this.toggleSorting(4), 3000);
   }
+
   static getDerivedStateFromProps(nextProps, prevState) {
     let ret = commonGetDerivedStateFromProps(nextProps, prevState);
     if (ret === null) {
@@ -85,8 +84,7 @@ class DataTable extends Component {
         inputSpaceIndex: DataTable.createInputSpaceIndex(nextProps),
 
         /* below will be calculated late */
-        editableIndex: null,
-        sortableIndex: null
+        editableIndex: null
       });
     }
     return null;
@@ -182,8 +180,7 @@ class DataTable extends Component {
   setIndices() {
     //      Array.isArray(this.props.editableIndices)
     let toCheck = [
-      { stateName: "editableIndex", source: this.props.editableIndices },
-      { stateName: "sortableIndex", source: this.props.sortableIndices }
+      { stateName: "editableIndex", source: this.props.editableIndices }
     ].filter(
       checkItem =>
         Array.isArray(checkItem.source) &&
@@ -454,7 +451,6 @@ class DataTable extends Component {
     orderList = orderList.map(i => {
       return i.rowIndex;
     });
-    console.log("JPJP", colIndex, orderList);
 
     this.setState({
       sorted: orderList,
@@ -474,6 +470,9 @@ class DataTable extends Component {
     } else {
       this.setSortedState(colIndex, false);
     }
+  }
+  toggleSortingWithKey(key) {
+    this.toggleSorting(this.createMapKeyToFlattenIndex()[key]);
   }
 
   render() {
@@ -506,6 +505,8 @@ class DataTable extends Component {
                   columns={this.props.columns}
                   widthList={this.state.headerCellsWidthList}
                   objectRefOfCellMap={this.objectRefOfCellMap}
+                  sortableIndices={this.props.sortableIndices}
+                  whenSortButtonClick={key => this.toggleSortingWithKey(key)}
                 />
 
                 {/*
@@ -551,6 +552,7 @@ class DataTable extends Component {
                 <Header
                   columns={this.props.columns}
                   funcRefToGetStyleInfo={this.funcRefToGetStyleInfo}
+                  sortableIndices={this.props.sortableIndices}
                 />
 
                 {/*
@@ -594,7 +596,6 @@ class DataTable extends Component {
                         }
                         editableIndex={this.state.editableIndex}
                         inputSpaceIndex={this.state.inputSpaceIndex}
-                        sortableIndex={this.state.sortableIndex}
                         pageVersion={this.state.version}
                         toggleTreeFunc={rowIndex => this.toggleTree(rowIndex)}
                         toggleSortingFunc={colIndex =>
