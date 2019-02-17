@@ -16,9 +16,10 @@ class Home extends Component {
       "id",
       { value: "AAA", children: ["PPP", "QQQQ"] },
       "editable",
-      "input"
+      "random"
     ];
     this.ConstTableEditable = ["editable"];
+    this.ConstTableSortable = ["random"];
 
     this.state = {
       tableRows: [],
@@ -181,6 +182,7 @@ class Home extends Component {
             columns={this.ConstTableColumns}
             editableIndices={this.ConstTableEditable}
             inputSpaceIndices={this.state.tableInputSpace}
+            sortableIndices={this.ConstTableSortable}
           />
         </div>
       </div>

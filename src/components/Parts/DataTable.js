@@ -25,17 +25,14 @@ class DataTable extends Component {
       /* for adjust fixed height */
       lockForAdjustFixedHeight: false,
 
-      /* below will be calculated */
-      editableIndex: null,
-      inputSpaceIndex: [],
-
       /* used in commonGetDerivedStateFromProps */
       version: 0,
       importantPropsSnapshot: {
         rows: null,
         columns: null,
-        editableIndex: null,
-        inputSpaceIndex: null
+        editableIndices: null,
+        inputSpaceIndices: null,
+        sortableIndices: null
       }
     };
     /* END initial state setup */
@@ -85,7 +82,11 @@ class DataTable extends Component {
         /* normally can use `this` insetead of self class name in static methods,
          but here can't probably because there is React restriction or so */
         //editableIndex: DataTable.createEditableIndex(nextProps),
-        inputSpaceIndex: DataTable.createInputSpaceIndex(nextProps)
+        inputSpaceIndex: DataTable.createInputSpaceIndex(nextProps),
+
+        /* below will be calculated late */
+        editableIndex: null,
+        sortableIndex: null
       });
     }
     return null;
@@ -181,8 +182,13 @@ class DataTable extends Component {
   setIndices() {
     //      Array.isArray(this.props.editableIndices)
     let toCheck = [
-      { stateName: "editableIndex", source: this.props.editableIndices }
-    ].filter(a => Array.isArray(a.source));
+      { stateName: "editableIndex", source: this.props.editableIndices },
+      { stateName: "sortableIndex", source: this.props.sortableIndices }
+    ].filter(
+      checkItem =>
+        Array.isArray(checkItem.source) &&
+        this.state[checkItem.stateName] === null
+    );
     if (toCheck.length === 0) {
       return;
     }
@@ -191,6 +197,7 @@ class DataTable extends Component {
       return;
     }
 
+    let toSetState = {};
     let map = this.createMapKeyToFlattenIndex();
     toCheck.forEach(checkItem => {
       let ret = [];
@@ -200,10 +207,10 @@ class DataTable extends Component {
         }
       });
 
-      let stateTmp = {};
-      stateTmp[checkItem.stateName] = ret;
-      setTimeout(() => this.setState(stateTmp), 1);
+      toSetState[checkItem.stateName] = ret;
     });
+
+    setTimeout(() => this.setState(toSetState), 1);
   }
   setScrollTopStart() {
     this.setVariableHeightController = runWithInterval(500, resolve => {
@@ -587,6 +594,7 @@ class DataTable extends Component {
                         }
                         editableIndex={this.state.editableIndex}
                         inputSpaceIndex={this.state.inputSpaceIndex}
+                        sortableIndex={this.state.sortableIndex}
                         pageVersion={this.state.version}
                         toggleTreeFunc={rowIndex => this.toggleTree(rowIndex)}
                         toggleSortingFunc={colIndex =>
