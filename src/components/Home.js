@@ -11,16 +11,17 @@ import axios from "axios";
 class Home extends Component {
   constructor() {
     super();
+
+    this.ConstTableColumns = [
+      "id",
+      { value: "AAA", children: ["PPP", "QQQQ"] },
+      "editable",
+      "input"
+    ];
+    this.ConstTableEditable = ["editable"];
+
     this.state = {
       tableRows: [],
-      tableColumns: [
-        "id",
-        { value: "AAA", children: ["PPP", "QQQQ"] },
-        "editable",
-        "input"
-      ],
-      tableEditable: ["editable"],
-      //tableInputSpace: ["input"],
       variableHeight: 0,
       loading: false
     };
@@ -177,8 +178,8 @@ class Home extends Component {
         >
           <DataTable
             rows={this.state.tableRows}
-            columns={this.state.tableColumns}
-            editableIndices={this.state.tableEditable}
+            columns={this.ConstTableColumns}
+            editableIndices={this.ConstTableEditable}
             inputSpaceIndices={this.state.tableInputSpace}
           />
         </div>
