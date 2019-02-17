@@ -342,7 +342,16 @@ class Header extends Component {
                 <button
                   onClick={() => this.props.whenSortButtonClick(keyToCheck)}
                 >
-                  SORT
+                  {(() => {
+                    if (this.props.sortColumnKey === keyToCheck) {
+                      if (this.props.sorted && this.props.sortReversed) {
+                        return "RESET SORT";
+                      } else if (this.props.sorted) {
+                        return "REVERSE SORT";
+                      }
+                    }
+                    return "SORT";
+                  })()}
                 </button>
               );
             }

@@ -77,6 +77,7 @@ class DataTable extends Component {
         sorted: null,
         sortReversed: null,
         sortColumnIndex: null,
+        sortColumnKey: null,
 
         /* normally can use `this` insetead of self class name in static methods,
          but here can't probably because there is React restriction or so */
@@ -473,6 +474,7 @@ class DataTable extends Component {
   }
   toggleSortingWithKey(key) {
     this.toggleSorting(this.createMapKeyToFlattenIndex()[key]);
+    this.setState({ sortColumnKey: key });
   }
 
   render() {
@@ -506,6 +508,9 @@ class DataTable extends Component {
                   widthList={this.state.headerCellsWidthList}
                   objectRefOfCellMap={this.objectRefOfCellMap}
                   sortableIndices={this.props.sortableIndices}
+                  sorted={this.state.sorted}
+                  sortReversed={this.state.sortReversed}
+                  sortColumnKey={this.state.sortColumnKey}
                   whenSortButtonClick={key => this.toggleSortingWithKey(key)}
                 />
 
@@ -553,6 +558,9 @@ class DataTable extends Component {
                   columns={this.props.columns}
                   funcRefToGetStyleInfo={this.funcRefToGetStyleInfo}
                   sortableIndices={this.props.sortableIndices}
+                  sorted={this.state.sorted}
+                  sortReversed={this.state.sortReversed}
+                  sortColumnKey={this.state.sortColumnKey}
                 />
 
                 {/*

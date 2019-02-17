@@ -16,10 +16,11 @@ class Home extends Component {
       "id",
       { value: "AAA", children: ["PPP", "QQQQ"] },
       "editable",
-      "random"
+      "random1",
+      "random2"
     ];
     this.ConstTableEditable = ["editable"];
-    this.ConstTableSortable = ["random"];
+    this.ConstTableSortable = ["random1", "random2"];
 
     this.state = {
       tableRows: [],
@@ -48,7 +49,7 @@ class Home extends Component {
     */
     setTimeout(() => {
       let rows = [];
-      rows.push({ nest: 0, data: ["ID0", 3, 4, 5, 0] });
+      rows.push({ nest: 0, data: ["ID0", 3, 4, 5, 0, 1] });
 
       let prevNest = 0;
       while (rows.length < 30) {
@@ -58,7 +59,14 @@ class Home extends Component {
         }
         rows.push({
           nest: nest,
-          data: ["ID" + rows.length, 3, 4, 5, getRandomInt(100)]
+          data: [
+            "ID" + rows.length,
+            3,
+            4,
+            5,
+            getRandomInt(100),
+            getRandomInt(100)
+          ]
         });
         prevNest = nest;
       }
@@ -136,7 +144,7 @@ class Home extends Component {
         >
           {(() => {
             let list = [];
-            for (let i = 0; i < 30; i++) {
+            for (let i = 0; i < 10; i++) {
               list.push(
                 <span style={{ display: "inline-block", marginRight: "30px" }}>
                   ABCDEFG
