@@ -5,9 +5,15 @@ import { eachWithIndex } from "../../Util";
 
 class DataRow extends Component {
   calcType(cellIndex) {
-    if (this.props.editableIndex.includes(cellIndex)) {
+    if (
+      this.props.editableIndex &&
+      this.props.editableIndex.includes(cellIndex)
+    ) {
       return "editable";
-    } else if (this.props.inputSpaceIndex.includes(cellIndex)) {
+    } else if (
+      this.props.inputSpaceIndex &&
+      this.props.inputSpaceIndex.includes(cellIndex)
+    ) {
       return "inputSpace";
     }
   }

@@ -57,8 +57,14 @@ class Header extends Component {
       ) {
         nextProps.funcRefToGetStyleInfo.func = prevState.funcToGetStyleInfo;
       }
+
+      let cellMap = Header.createCellMap(nextProps.columns);
+      if (nextProps.objectRefOfCellMap) {
+        nextProps.objectRefOfCellMap.object = cellMap;
+      }
+
       return Object.assign(ret, {
-        cellMap: Header.createCellMap(nextProps.columns)
+        cellMap: cellMap
       });
     }
     return null;
@@ -84,7 +90,7 @@ class Header extends Component {
         );
 
         retArray[scanningDepth].push({
-          value: item.self,
+          value: item.value,
           descendantLastItemsCount: itemAnalysisResult.descendantLastItemsCount
         });
 
@@ -129,10 +135,10 @@ class Header extends Component {
         let result = Header.createPartCellMap(child.children);
         //console.log("createPartCellMap result", result);
         if (Array.isArray(result)) {
-          list.push({ value: child.self, depth: 1, children: result });
+          list.push({ value: child.value, depth: 1, children: result });
         } else {
           list.push({
-            value: child.self,
+            value: child.value,
             depth: result.depth,
             children: result.children
           });

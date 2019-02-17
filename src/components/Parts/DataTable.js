@@ -26,7 +26,7 @@ class DataTable extends Component {
       lockForAdjustFixedHeight: false,
 
       /* below will be calculated */
-      editableIndex: [],
+      editableIndex: null,
       inputSpaceIndex: [],
 
       /* used in commonGetDerivedStateFromProps */
@@ -51,6 +51,8 @@ class DataTable extends Component {
 
     /* func ref : Header object set its function, and later DataTable object run it */
     this.funcRefToGetStyleInfo = { func: null };
+
+    this.objectRefOfCellMap = { object: null };
 
     this.setScrollTopStart();
     this.adjustHeaderRelatedValuesThrottle = throttle(500, () => {
@@ -82,7 +84,7 @@ class DataTable extends Component {
 
         /* normally can use `this` insetead of self class name in static methods,
          but here can't probably because there is React restriction or so */
-        editableIndex: DataTable.createEditableIndex(nextProps),
+        //editableIndex: DataTable.createEditableIndex(nextProps),
         inputSpaceIndex: DataTable.createInputSpaceIndex(nextProps)
       });
     }
@@ -134,6 +136,74 @@ class DataTable extends Component {
     if (this.state.lockForAdjustFixedHeight) {
       this.adjustFixedHeight();
     }
+    this.setIndices();
+  }
+  createMapKeyToFlattenIndex() {
+    let cellMap = this.objectRefOfCellMap.object;
+    let ret = {};
+    let flattenSerialNumber = -1;
+    let cacheOfKeysSpecifiedAsId = {};
+    for (let colIndex = 0; ; colIndex++) {
+      let anyExists = false;
+      for (let rowIndex = 0; rowIndex < cellMap.length; rowIndex++) {
+        let row = cellMap[rowIndex];
+        if (!row[colIndex]) {
+          continue;
+        }
+
+        anyExists = true;
+        if (
+          !(
+            typeof row[colIndex].descendantLastItemsCount !== "number" ||
+            row[colIndex].descendantLastItemsCount <= 0
+          )
+        ) {
+          continue;
+        }
+
+        flattenSerialNumber++;
+        if (typeof row[colIndex].id === "string") {
+          cacheOfKeysSpecifiedAsId[row[colIndex].id] = true;
+          ret[row[colIndex].id] = flattenSerialNumber;
+        } else if (typeof row[colIndex].value === "string") {
+          if (!cacheOfKeysSpecifiedAsId[row[colIndex].value]) {
+            ret[row[colIndex].value] = flattenSerialNumber;
+          }
+        }
+      }
+
+      if (!anyExists) {
+        break;
+      }
+    }
+    return ret;
+  }
+  setIndices() {
+    //      Array.isArray(this.props.editableIndices)
+    let toCheck = [
+      { stateName: "editableIndex", source: this.props.editableIndices }
+    ].filter(a => Array.isArray(a.source));
+    if (toCheck.length === 0) {
+      return;
+    }
+
+    if (!this.objectRefOfCellMap.object) {
+      return;
+    }
+
+    let map = this.createMapKeyToFlattenIndex();
+    toCheck.forEach(checkItem => {
+      let ret = [];
+      checkItem.source.forEach(key => {
+        if (map[key] !== undefined) {
+          ret.push(map[key]);
+        }
+      });
+
+      let stateTmp = {};
+      stateTmp[checkItem.stateName] = ret;
+      setTimeout(() => this.setState(stateTmp), 1);
+    });
   }
   setScrollTopStart() {
     this.setVariableHeightController = runWithInterval(500, resolve => {
@@ -166,6 +236,7 @@ class DataTable extends Component {
   }
 
   static createEditableIndex = props => {
+    /* The index list consists of an index of column, which is in flatten base */
     let ret = [];
     if (Array.isArray(props.editableIndices)) {
       for (let i = 0; i < props.columns.length; i++) {
@@ -427,6 +498,7 @@ class DataTable extends Component {
                 <Header
                   columns={this.props.columns}
                   widthList={this.state.headerCellsWidthList}
+                  objectRefOfCellMap={this.objectRefOfCellMap}
                 />
 
                 {/*

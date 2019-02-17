@@ -15,11 +15,11 @@ class Home extends Component {
       tableRows: [],
       tableColumns: [
         "id",
-        { self: "AAA", children: ["PPP", "QQQQ"] },
+        { value: "AAA", children: ["PPP", "QQQQ"] },
         "editable",
         "input"
       ],
-      //tableEditable: ["editable"],
+      tableEditable: ["editable"],
       //tableInputSpace: ["input"],
       variableHeight: 0,
       loading: false
@@ -35,6 +35,7 @@ class Home extends Component {
   }
   debugInsertDataToTable() {
     /* inserting test */
+    /*
     setTimeout(() => {
       let rows = [
         { data: ["ID0", 1091, "123456789123456789", "a"] },
@@ -42,6 +43,7 @@ class Home extends Component {
       ];
       this.setState({ tableRows: rows });
     }, 500);
+    */
     setTimeout(() => {
       let rows = [];
       rows.push({ nest: 0, data: ["ID0", 3, 4, 5, 0] });
