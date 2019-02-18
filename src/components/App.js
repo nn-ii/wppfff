@@ -215,16 +215,18 @@ class App extends PureComponent {
         <div
           className="main-content"
           onMouseEnter={
-            this.state.showingMenu &&
-            (() => {
-              this.setState({ showingMenu: false });
-            })
+            this.state.showingMenu
+              ? () => {
+                  this.setState({ showingMenu: false });
+                }
+              : undefined
           }
           onMouseMove={
-            this.state.showingMenu &&
-            (() => {
-              this.setState({ showingMenu: false });
-            })
+            this.state.showingMenu
+              ? () => {
+                  this.setState({ showingMenu: false });
+                }
+              : undefined
           }
           style={{
             top: headerHeight,

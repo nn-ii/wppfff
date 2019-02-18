@@ -58,7 +58,8 @@ class DataTable extends PureComponent {
     [
       "toggleTree",
       "toggleSortingWithKey",
-      "callBackWhenEditableActionWrapper"
+      "callBackWhenEditableActionWrapper",
+      "callBackWhenInputSpaceActionWrapper"
     ].forEach(methodName => {
       this[methodName] = this[methodName].bind(this);
     });
@@ -467,8 +468,13 @@ class DataTable extends PureComponent {
        We intercept so that that change will reflect DataTable's state by running this.adjustHeaderRelatedValuesThrottle()    
   */
     this.adjustHeaderRelatedValuesThrottle();
-    this.props.callBackWhenEditableAction();
+    this.props.callBackWhenEditableAction(i, j, k);
   }
+  callBackWhenInputSpaceActionWrapper(i, j, k) {
+    this.adjustHeaderRelatedValuesThrottle();
+    this.props.callBackWhenInputSpaceAction(i, j, k);
+  }
+
   createDataRowDefinition(r, row_i, internalStateForTree) {
     let setting = this.calcRowSetting(internalStateForTree, r.nest, row_i);
 
@@ -490,7 +496,7 @@ class DataTable extends PureComponent {
         pageVersion={this.state.version}
         toggleTreeFunc={this.toggleTree}
         callBackWhenEditableAction={this.callBackWhenEditableActionWrapper}
-        callBackWhenInputSpaceAction={this.props.callBackWhenInputSpaceAction}
+        callBackWhenInputSpaceAction={this.callBackWhenInputSpaceActionWrapper}
       />
     );
   }
