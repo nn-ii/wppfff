@@ -110,14 +110,19 @@ class DataTable extends Component {
 
     this.setIndices();
 
-    if (
-      prevState &&
-      !prevState.runnningHeavyOperation &&
-      this.state &&
-      this.state.runnningHeavyOperation
-    ) {
-      this.heavyOperation();
-      this.heavyOperation = null;
+    if (prevState && this.state) {
+      if (
+        !prevState.heavyOperationState &&
+        this.state.heavyOperationState === 1
+      ) {
+        this.heavyOperation();
+        this.heavyOperation = null;
+      } else if (
+        prevState.heavyOperationState === 1 &&
+        this.state.heavyOperationState === 2
+      ) {
+        this.setState({ heavyOperationState: null });
+      }
     }
   }
 
@@ -445,12 +450,10 @@ class DataTable extends Component {
         sorted: orderList,
         sortReversed: toReverse || false,
         sortColumnIndex: colIndex,
-
-        // for testing
-        runnningHeavyOperation: false
+        heavyOperationState: 2
       });
     };
-    this.setState({ runnningHeavyOperation: true });
+    this.setState({ heavyOperationState: 1 });
   }
   toggleSorting(colIndex) {
     if (this.state.sorted === null) {
@@ -597,7 +600,7 @@ class DataTable extends Component {
             size: "40px",
             top: "40px",
             zIndex: "30",
-            display: this.state.runnningHeavyOperation || "none"
+            display: this.state.heavyOperationState || "none"
           }}
         >
           In progress ....
