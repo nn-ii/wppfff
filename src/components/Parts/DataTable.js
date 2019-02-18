@@ -79,13 +79,9 @@ class DataTable extends Component {
         sortColumnIndex: null,
         sortColumnKey: null,
 
-        /* normally can use `this` insetead of self class name in static methods,
-         but here can't probably because there is React restriction or so */
-        //editableIndex: DataTable.createEditableIndex(nextProps),
-        inputSpaceIndex: DataTable.createInputSpaceIndex(nextProps),
-
         /* below will be calculated late */
-        editableIndex: null
+        editableIndex: null,
+        inputSpaceIndex: null
       });
     }
     return null;
@@ -179,14 +175,15 @@ class DataTable extends Component {
     return ret;
   }
   setIndices() {
-    //      Array.isArray(this.props.editableIndices)
     let toCheck = [
-      { stateName: "editableIndex", source: this.props.editableIndices }
+      { stateName: "editableIndex", source: this.props.editableIndices },
+      { stateName: "inputSpaceIndex", source: this.props.inputSpaceIndices }
     ].filter(
       checkItem =>
         Array.isArray(checkItem.source) &&
         this.state[checkItem.stateName] === null
     );
+
     if (toCheck.length === 0) {
       return;
     }
@@ -594,6 +591,7 @@ class DataTable extends Component {
                     return (
                       <DataRow
                         key={row_i}
+                        rowIndex={row_i}
                         isClosed={setting.isClosed}
                         isParentOfClosed={setting.isParentOfClosed}
                         cells={r.data}
@@ -608,6 +606,30 @@ class DataTable extends Component {
                         toggleTreeFunc={rowIndex => this.toggleTree(rowIndex)}
                         toggleSortingFunc={colIndex =>
                           this.toggleSorting(colIndex)
+                        }
+                        callBackWhenEditableAction={
+                          this.state.editableIndex &&
+                          this.state.editableIndex.length > 0 &&
+                          ((rowIndex, colIndex, summary) => {
+                            console.log(
+                              "callBackWhenEditableAction",
+                              rowIndex,
+                              colIndex,
+                              summary
+                            );
+                          })
+                        }
+                        callBackWhenInputSpaceAction={
+                          this.state.inputSpaceIndex &&
+                          this.state.inputSpaceIndex.length > 0 &&
+                          ((rowIndex, colIndex, summary) => {
+                            console.log(
+                              "callBackWhenInputSpaceAction",
+                              rowIndex,
+                              colIndex,
+                              summary
+                            );
+                          })
                         }
                       />
                     );

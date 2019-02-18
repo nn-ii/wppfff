@@ -19,14 +19,17 @@ class DataRow extends Component {
   }
 
   render() {
+    //console.log('DATA ROW', this.props.inputSpaceIndex)
+
     return (
       <tr style={{ display: this.props.isClosed && "none" }}>
         {eachWithIndex(this.props.cells, (c, i) => {
+          let type = this.calcType(i);
           return (
             <Cell
               key={i}
               index={i}
-              type={this.calcType(i)}
+              type={type}
               content={c}
               rowIndex={this.props.index}
               nest={this.props.nest}
@@ -34,6 +37,24 @@ class DataRow extends Component {
               rowIsParentOfClosed={this.props.isParentOfClosed}
               pageVersion={this.props.pageVersion}
               toggleTreeFunc={this.props.toggleTreeFunc}
+              callBackWhenEditableAction={
+                type === "editable" &&
+                (summary =>
+                  this.props.callBackWhenEditableAction(
+                    this.props.rowIndex,
+                    i,
+                    summary
+                  ))
+              }
+              callBackWhenInputSpaceAction={
+                type === "inputSpace" &&
+                (summary =>
+                  this.props.callBackWhenInputSpaceAction(
+                    this.props.rowIndex,
+                    i,
+                    summary
+                  ))
+              }
             />
           );
         })}

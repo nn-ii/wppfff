@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { castForEditing, commonGetDerivedStateFromProps } from "../../Util";
+import { castForEditing, commonGetDerivedStateFromProps } from "../Util";
 
 class InputSpace extends Component {
   constructor(props) {
@@ -16,8 +16,8 @@ class InputSpace extends Component {
       return null;
     } else if (typeof ret === "object") {
       return Object.assign(ret, {
-        value: castForEditing(nextProps.initialValue),
         initialValue: castForEditing(nextProps.initialValue),
+        value: castForEditing(nextProps.initialValue),
         changed: false
       });
     }
@@ -30,10 +30,14 @@ class InputSpace extends Component {
           type="text"
           value={this.state.value}
           onChange={e => {
-            this.setState({
+            let tmp = {
               value: e.target.value,
               changed: this.state.initialValue !== e.target.value
-            });
+            };
+            this.setState(tmp);
+            this.props.callBackWhenInputSpaceAction(
+              Object.assign({}, this.state, tmp)
+            );
           }}
         />
         {this.state.changed && " [Changed]"}

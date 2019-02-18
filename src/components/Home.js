@@ -14,13 +14,14 @@ class Home extends Component {
 
     this.ConstTableColumns = [
       "id",
-      { value: "AAA", children: ["PPP", "QQQQ"] },
+      { value: "AAA", children: [{ id: "PPPPInput", value: "PPPP" }, "PPPP"] },
       "editable",
       "random1",
       "random2"
     ];
-    this.ConstTableEditable = ["editable"];
-    this.ConstTableSortable = ["random1", "random2"];
+    this.ConstTableEditableIndices = ["editable"];
+    this.ConstTableInputSpaceIndices = ["PPPPInput"];
+    this.ConstTableSortableIndices = ["random1", "random2"];
 
     this.state = {
       tableRows: [],
@@ -188,9 +189,9 @@ class Home extends Component {
           <DataTable
             rows={this.state.tableRows}
             columns={this.ConstTableColumns}
-            editableIndices={this.ConstTableEditable}
-            inputSpaceIndices={this.state.tableInputSpace}
-            sortableIndices={this.ConstTableSortable}
+            editableIndices={this.ConstTableEditableIndices}
+            inputSpaceIndices={this.ConstTableInputSpaceIndices}
+            sortableIndices={this.ConstTableSortableIndices}
           />
         </div>
       </div>

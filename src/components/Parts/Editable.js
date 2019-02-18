@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { castForEditing, commonGetDerivedStateFromProps } from "../../Util";
+import { castForEditing, commonGetDerivedStateFromProps } from "../Util";
 
 class Editable extends Component {
   constructor(props) {
@@ -61,7 +61,10 @@ class Editable extends Component {
     }
   }
   startEdit() {
-    this.setState({ editing: true });
+    let tmp = { editing: true };
+    this.setState(tmp);
+    console.log("startEdit", this.props);
+    this.props.callBackWhenEditableAction(Object.assign({}, this.state, tmp));
   }
   onKeyPress(e) {
     if (e.key !== "Enter") {
@@ -70,10 +73,12 @@ class Editable extends Component {
     this.whenFinish();
   }
   whenFinish() {
-    this.setState({
+    let tmp = {
       editing: false,
       changed: this.state.initialValue !== this.state.value
-    });
+    };
+    this.setState(tmp);
+    this.props.callBackWhenEditableAction(Object.assign({}, this.state, tmp));
   }
 }
 

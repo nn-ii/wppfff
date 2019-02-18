@@ -1,7 +1,7 @@
 import React from "react";
 import ToggleButton from "./ToggleButton";
-import Editable from "./Editable";
-import InputSpace from "./InputSpace";
+import Editable from "../Editable";
+import InputSpace from "../InputSpace";
 
 const Cell = props => {
   let toggleButton, paddingLeft;
@@ -24,6 +24,7 @@ const Cell = props => {
       <Editable
         parentVersion={props.pageVersion}
         initialValue={props.content}
+        callBackWhenEditableAction={props.callBackWhenEditableAction}
       />
     );
   } else if (props.type === "inputSpace") {
@@ -31,6 +32,7 @@ const Cell = props => {
       <InputSpace
         parentVersion={props.pageVersion}
         initialValue={props.content}
+        callBackWhenInputSpaceAction={props.callBackWhenInputSpaceAction}
       />
     );
   } else {

@@ -82,21 +82,31 @@ class Header extends Component {
         retArray[scanningDepth].push({ value: item });
         descendantLastItemsCount++;
       } else if (typeof item === "object") {
-        let itemAnalysisResult = Header.mapToRowsArray(
-          item.children,
-          scanningDepth + 1,
-          false,
-          retArray
-        );
+        if (item.children) {
+          let itemAnalysisResult = Header.mapToRowsArray(
+            item.children,
+            scanningDepth + 1,
+            false,
+            retArray
+          );
 
-        retArray[scanningDepth].push({
-          value: item.value,
-          descendantLastItemsCount: itemAnalysisResult.descendantLastItemsCount
-        });
+          retArray[scanningDepth].push({
+            id: item.id,
+            value: item.value,
+            descendantLastItemsCount:
+              itemAnalysisResult.descendantLastItemsCount
+          });
 
-        descendantLastItemsCount =
-          descendantLastItemsCount +
-          itemAnalysisResult.descendantLastItemsCount;
+          descendantLastItemsCount =
+            descendantLastItemsCount +
+            itemAnalysisResult.descendantLastItemsCount;
+        } else {
+          retArray[scanningDepth].push({
+            id: item.id,
+            value: item.value
+          });
+          descendantLastItemsCount++;
+        }
       }
     });
 
