@@ -91,6 +91,28 @@ class DataTable extends Component {
     return null;
   }
 
+  componentDidMount() {
+    this.componentDidUpdate();
+  }
+
+  componentDidUpdate() {
+    // 1. adjusting header cells' width, and rows' width and height
+    this.adjustHeaderRelatedValuesThrottle();
+
+    // 2. adjusting height (fixed) of outer of table
+    // (so that height of inner of scrollable area will not be changed after user toggle tree)
+    if (this.state.lockForAdjustFixedHeight) {
+      this.adjustFixedHeight();
+    }
+    this.setIndices();
+  }
+
+  componentWillUnmount() {
+    if (this.setScrollTopController) {
+      this.setScrollTopController.clear();
+    }
+  }
+
   calcRowSetting(internalStateForTree, nest, rowIndex) {
     /* prepare for each row */
     let isClosed = false;
@@ -125,21 +147,6 @@ class DataTable extends Component {
     };
   }
 
-  componentDidMount() {
-    this.componentDidUpdate();
-  }
-
-  componentDidUpdate() {
-    // 1. adjusting header cells' width, and rows' width and height
-    this.adjustHeaderRelatedValuesThrottle();
-
-    // 2. adjusting height (fixed) of outer of table
-    // (so that height of inner of scrollable area will not be changed after user toggle tree)
-    if (this.state.lockForAdjustFixedHeight) {
-      this.adjustFixedHeight();
-    }
-    this.setIndices();
-  }
   createMapKeyToFlattenIndex() {
     let cellMap = this.objectRefOfCellMap.object;
     let ret = {};
@@ -215,7 +222,7 @@ class DataTable extends Component {
     setTimeout(() => this.setState(toSetState), 1);
   }
   setScrollTopStart() {
-    this.setVariableHeightController = runWithInterval(500, resolve => {
+    this.setScrollTopController = runWithInterval(500, resolve => {
       retryWithWait(50, 500, () => this.scrollableNode.current.scrollTop).then(
         current => {
           if (this.state.scrollTop !== current) {
