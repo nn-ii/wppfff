@@ -5,13 +5,11 @@ import Roster from "./Roster";
 import Schedule from "./Schedule";
 
 const Main = props => (
-  <main>
-    <Switch>
-      <Route exact path="/" render={() => <Home fromRoot={props.fromRoot} />} />
-      <Route path="/roster" component={Roster} />
-      <Route path="/schedule" component={Schedule} />
-    </Switch>
-  </main>
+  <Switch>
+    <Route exact path="/" render={() => <Home fromRoot={props.fromRoot} />} />
+    <Route path="/roster" component={Roster} />
+    <Route path="/schedule" component={Schedule} />
+  </Switch>
 );
 
 export default Main;
