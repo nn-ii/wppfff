@@ -524,8 +524,6 @@ class DataTable extends PureComponent {
       checkClosedMode: false,
       parentNest: null
     };
-    let checkClosedMode = false;
-    let parentNest = null;
 
     return (
       <div
