@@ -49,6 +49,7 @@ class DataTable extends PureComponent {
     this.funcRefToGetStyleInfo = { func: null };
 
     this.objectRefOfCellMap = { object: null };
+    this.listRefOfLastItemList = { list: null };
 
     this.setScrollTopStart();
     this.adjustHeaderRelatedValuesThrottle = throttle(500, () => {
@@ -57,7 +58,7 @@ class DataTable extends PureComponent {
 
     [
       "toggleTree",
-      "toggleSortingWithKey",
+      "toggleSortingWithIndex",
       "callBackWhenEditableActionWrapper",
       "callBackWhenInputSpaceActionWrapper"
     ].forEach(methodName => {
@@ -85,7 +86,6 @@ class DataTable extends PureComponent {
         sorted: null,
         sortReversed: null,
         sortColumnIndex: null,
-        sortColumnKey: null,
 
         /* below will be calculated late */
         editableIndex: null,
@@ -111,7 +111,7 @@ class DataTable extends PureComponent {
 
     //
 
-    this.setIndices();
+    this.setIndicesIfNeeded();
   }
 
   componentWillUnmount() {
@@ -169,13 +169,18 @@ class DataTable extends PureComponent {
 
         anyExists = true;
         if (
-          !(
-            typeof row[colIndex].descendantLastItemsCount !== "number" ||
-            row[colIndex].descendantLastItemsCount <= 0
-          )
+          typeof row[colIndex].descendantLastItemsCount === "number" &&
+          row[colIndex].descendantLastItemsCount > 0
         ) {
           continue;
         }
+
+        console.log(
+          "createMapKeyToFlattenIndex ! ",
+          colIndex,
+          rowIndex,
+          row[colIndex]
+        );
 
         flattenSerialNumber++;
         if (typeof row[colIndex].id === "string") {
@@ -194,7 +199,25 @@ class DataTable extends PureComponent {
     }
     return ret;
   }
-  setIndices() {
+  static getKeyFromHeaderColumnItem(item) {
+    if (typeof item.id === "string") {
+      return item.id;
+    } else if (typeof item.value === "string") {
+      return item.value;
+    }
+  }
+  createMapKeyToIndexOfLastItemList() {
+    let lastItemList = this.listRefOfLastItemList.list;
+    let ret = {};
+
+    eachWithIndexNotMap(lastItemList, (item, index) => {
+      ret[this.constructor.getKeyFromHeaderColumnItem(item)] = index;
+    });
+
+    return ret;
+  }
+
+  setIndicesIfNeeded() {
     let toCheck = [
       { stateName: "editableIndex", source: this.props.editableIndices },
       { stateName: "inputSpaceIndex", source: this.props.inputSpaceIndices }
@@ -208,12 +231,12 @@ class DataTable extends PureComponent {
       return;
     }
 
-    if (!this.objectRefOfCellMap.object) {
+    if (!this.listRefOfLastItemList.list) {
       return;
     }
 
     let toSetState = {};
-    let map = this.createMapKeyToFlattenIndex();
+    let map = this.createMapKeyToIndexOfLastItemList();
     toCheck.forEach(checkItem => {
       let ret = [];
       checkItem.source.forEach(key => {
@@ -447,6 +470,7 @@ class DataTable extends PureComponent {
     });
   }
   toggleSorting(colIndex) {
+    console.log("toggleSorting", colIndex);
     if (this.state.sorted === null) {
       this.setSortedState(colIndex, false);
     } else if (this.state.sortColumnIndex === colIndex) {
@@ -459,9 +483,10 @@ class DataTable extends PureComponent {
       this.setSortedState(colIndex, false);
     }
   }
-  toggleSortingWithKey(key) {
-    this.toggleSorting(this.createMapKeyToFlattenIndex()[key]);
-    this.setState({ sortColumnKey: key });
+  toggleSortingWithIndex(index) {
+    // XXX createMapKeyToFlattenIndex runs each time => ineffective
+    this.toggleSorting(index);
+    this.setState({ sortColumnIndex: index });
   }
   callBackWhenEditableActionWrapper(i, j, k) {
     /* When Editable actions occuer, the cell's width may change.
@@ -543,11 +568,12 @@ class DataTable extends PureComponent {
                   columns={this.props.columns}
                   widthList={this.state.headerCellsWidthList}
                   objectRefOfCellMap={this.objectRefOfCellMap}
+                  listRefOfLastItemList={this.listRefOfLastItemList}
                   sortableIndices={this.props.sortableIndices}
                   sorted={this.state.sorted}
                   sortReversed={this.state.sortReversed}
-                  sortColumnKey={this.state.sortColumnKey}
-                  whenSortButtonClick={this.toggleSortingWithKey}
+                  sortColumnIndex={this.state.sortColumnIndex}
+                  whenSortButtonClick={this.toggleSortingWithIndex}
                 />
               </tbody>
             </table>
@@ -574,7 +600,7 @@ class DataTable extends PureComponent {
                   sortableIndices={this.props.sortableIndices}
                   sorted={this.state.sorted}
                   sortReversed={this.state.sortReversed}
-                  sortColumnKey={this.state.sortColumnKey}
+                  sortColumnIndex={this.state.sortColumnIndex}
                 />
 
                 {/* main data rows */}

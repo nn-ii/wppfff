@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-
+import DataTable from "../DataTable"; /// XXX: remove dependency
 import {
   eachWithIndex,
   eachWithIndexNotMap,
@@ -22,27 +22,6 @@ class Header extends Component {
     };
 
     this.firstTrNodeRef = React.createRef();
-
-    //console.log("createCellmap!");
-
-    //console.log("createCellmap result", Header.createCellMap(["a", "b"]));
-
-    /*
-    console.log(
-      "createCellmap result",
-      Header.createCellMap2(["a", { self: "b", children: ["x", "y"] }])
-    );
-*/
-    /*
-    console.log(
-      "createCellmap result",
-      Header.createCellMap([
-        "a",
-        { self: "b", children: ["x", "y"] },
-        { self: "c", children: ["x2", { self: "y2", children: ["p", "q"] }] }
-      ])
-    );
-    */
   }
   static getDerivedStateFromProps(nextProps, prevState) {
     let ret = commonGetDerivedStateFromProps(nextProps, prevState);
@@ -63,8 +42,21 @@ class Header extends Component {
         nextProps.objectRefOfCellMap.object = cellMap;
       }
 
+      let lastItemList = Header.createLastItemList(nextProps.columns);
+      let mapKeyToIndexOfLastItemList = {};
+      eachWithIndexNotMap(lastItemList, (item, index) => {
+        mapKeyToIndexOfLastItemList[
+          DataTable.getKeyFromHeaderColumnItem(item)
+        ] = index;
+      });
+
+      if (nextProps.listRefOfLastItemList) {
+        nextProps.listRefOfLastItemList.list = lastItemList;
+      }
+
       return Object.assign(ret, {
-        cellMap: cellMap
+        cellMap: cellMap,
+        mapKeyToIndexOfLastItemList: mapKeyToIndexOfLastItemList
       });
     }
     return null;
@@ -111,9 +103,38 @@ class Header extends Component {
     });
 
     if (isRoot) {
+      console.log("mapToRowsArray", retArray);
       return retArray;
     } else {
       return { descendantLastItemsCount: descendantLastItemsCount };
+    }
+  }
+
+  static createLastItemList(columns) {
+    return Header.createLastItemListRecursive(columns, true);
+  }
+
+  static createLastItemListRecursive(items, isRoot, retArray) {
+    retArray = retArray || [];
+
+    items.forEach(item => {
+      if (typeof item === "string" || React.isValidElement(item)) {
+        // this is `last item`
+        retArray.push({ value: item });
+      } else if (typeof item === "object") {
+        if (item.children) {
+          Header.createLastItemListRecursive(item.children, false, retArray);
+        } else {
+          retArray.push({
+            id: item.id,
+            value: item.value
+          });
+        }
+      }
+    });
+
+    if (isRoot) {
+      return retArray;
     }
   }
 
@@ -128,6 +149,7 @@ class Header extends Component {
       });
     });
 
+    console.log("Createcellmap", rowsArray);
     return rowsArray;
   }
 
@@ -346,14 +368,23 @@ class Header extends Component {
             }
             if (
               this.props.sortableIndices &&
-              this.props.sortableIndices.includes(keyToCheck)
+              this.props.sortableIndices.includes(keyToCheck) &&
+              this.state.mapKeyToIndexOfLastItemList &&
+              this.state.mapKeyToIndexOfLastItemList[keyToCheck]
             ) {
               sortButton = (
                 <button
-                  onClick={() => this.props.whenSortButtonClick(keyToCheck)}
+                  onClick={() =>
+                    this.props.whenSortButtonClick(
+                      this.state.mapKeyToIndexOfLastItemList[keyToCheck]
+                    )
+                  }
                 >
                   {(() => {
-                    if (this.props.sortColumnKey === keyToCheck) {
+                    if (
+                      this.props.sortColumnIndex ===
+                      this.state.mapKeyToIndexOfLastItemList[keyToCheck]
+                    ) {
                       if (this.props.sorted && this.props.sortReversed) {
                         return "RESET SORT";
                       } else if (this.props.sorted) {
