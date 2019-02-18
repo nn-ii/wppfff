@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { castForEditing, commonGetDerivedStateFromProps } from "../Util";
+import { debounce } from "throttle-debounce";
 
 class InputSpace extends Component {
   constructor(props) {
@@ -8,6 +9,12 @@ class InputSpace extends Component {
       version: 0,
       importantPropsSnapshot: { parentVersion: null }
     };
+
+    this.callBackWhenInputSpaceActionDebounced = debounce(200, override => {
+      this.props.callBackWhenInputSpaceAction(
+        Object.assign({}, this.state, override)
+      );
+    });
   }
   static getDerivedStateFromProps(nextProps, prevState) {
     let ret = commonGetDerivedStateFromProps(nextProps, prevState);
@@ -35,9 +42,7 @@ class InputSpace extends Component {
               changed: this.state.initialValue !== e.target.value
             };
             this.setState(tmp);
-            this.props.callBackWhenInputSpaceAction(
-              Object.assign({}, this.state, tmp)
-            );
+            this.callBackWhenInputSpaceActionDebounced(tmp);
           }}
         />
         {this.state.changed && " [Changed]"}
