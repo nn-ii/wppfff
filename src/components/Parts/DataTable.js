@@ -59,7 +59,6 @@ class DataTable extends Component {
       toggleTree: i => this.toggleTree(i),
       toggleSortingWithKey: i => this.toggleSortingWithKey(i)
     };
-    this.heavyOperation = null;
 
     this.debugStartDate = new Date();
   }
@@ -109,21 +108,6 @@ class DataTable extends Component {
     //
 
     this.setIndices();
-
-    if (prevState && this.state) {
-      if (
-        !prevState.heavyOperationState &&
-        this.state.heavyOperationState === 1
-      ) {
-        this.heavyOperation();
-        this.heavyOperation = null;
-      } else if (
-        prevState.heavyOperationState === 1 &&
-        this.state.heavyOperationState === 2
-      ) {
-        this.setState({ heavyOperationState: null });
-      }
-    }
   }
 
   componentWillUnmount() {
@@ -444,16 +428,11 @@ class DataTable extends Component {
       return i.rowIndex;
     });
 
-    this.debugCurrent("start heavy");
-    this.heavyOperation = () => {
-      this.setState({
-        sorted: orderList,
-        sortReversed: toReverse || false,
-        sortColumnIndex: colIndex,
-        heavyOperationState: 2
-      });
-    };
-    this.setState({ heavyOperationState: 1 });
+    this.setState({
+      sorted: orderList,
+      sortReversed: toReverse || false,
+      sortColumnIndex: colIndex
+    });
   }
   toggleSorting(colIndex) {
     if (this.state.sorted === null) {
@@ -593,17 +572,6 @@ class DataTable extends Component {
               </tbody>
             </table>
           </div>
-        </div>
-        <div
-          style={{
-            position: "absolute",
-            size: "40px",
-            top: "40px",
-            zIndex: "30",
-            display: this.state.heavyOperationState || "none"
-          }}
-        >
-          In progress ....
         </div>
       </div>
     );
