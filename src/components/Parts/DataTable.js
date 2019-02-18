@@ -6,7 +6,6 @@ import {
   eachWithIndexNotMap,
   commonGetDerivedStateFromProps,
   withoutPx,
-  cloneObjectSimple,
   retryWithWait,
   runWithInterval
 } from "../Util";
@@ -56,12 +55,12 @@ class DataTable extends Component {
       this.adjustHeaderRelatedValues();
     });
 
-    this.debugStartDate = new Date();
-
     this.functions = {
       toggleTree: i => this.toggleTree(i),
       toggleSortingWithKey: i => this.toggleSortingWithKey(i)
     };
+
+    this.debugStartDate = new Date();
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -92,10 +91,12 @@ class DataTable extends Component {
     return null;
   }
 
-  calcRowSetting(checkClosedMode, parentNest, nest, rowIndex) {
+  calcRowSetting(internalStateForTree, nest, rowIndex) {
     /* prepare for each row */
     let isClosed = false;
     let isParentOfClosed = false;
+    let checkClosedMode = internalStateForTree.checkClosedMode;
+    let parentNest = internalStateForTree.parentNest;
     let nextCheckClosedMode = checkClosedMode;
     let nextParentNest = parentNest;
 
@@ -210,6 +211,7 @@ class DataTable extends Component {
       toSetState[checkItem.stateName] = ret;
     });
 
+    // Using setTimeout so that warning message from React will not emerge in browser console
     setTimeout(() => this.setState(toSetState), 1);
   }
   setScrollTopStart() {
@@ -226,20 +228,6 @@ class DataTable extends Component {
         }
       );
     });
-  }
-
-  debugTime() {
-    let cur = new Date();
-    return cur.getTime() - this.debugStartDate.getTime();
-  }
-
-  debugCurrent(msg) {
-    console.log(
-      msg,
-      this.debugTime(),
-      (this.props.rows || []).length,
-      this.heightBeforeRender
-    );
   }
 
   static createEditableIndex = props => {
@@ -404,31 +392,6 @@ class DataTable extends Component {
         });
       }
     );
-
-    /*
-    let heightBefore = 0;
-    let each = 30;
-    /* 
-    let monitor = cnt => {
-      if (monitorCancelFlag || this.state.version !== versionWhenStarted) {
-        return;
-      }
-
-      retryWithWait(20, 500, () => {
-        return this.getFlexibleInnerNodeHeight();
-      }).then(current => {
-        if (heightBefore !== current) {
-          debounced();
-          heightBefore = current;
-        }
-
-        /* 10 second 
-        if (cnt < 10000 / each) {
-          setTimeout(monitor, each, cnt + 1);
-        }
-      });
-    };
-    monitor(); */
   }
 
   setSortedState(colIndex, toReverse) {
@@ -480,8 +443,37 @@ class DataTable extends Component {
     this.toggleSorting(this.createMapKeyToFlattenIndex()[key]);
     this.setState({ sortColumnKey: key });
   }
+  createDataRowDefinition(r, row_i, internalStateForTree) {
+    let setting = this.calcRowSetting(internalStateForTree, r.nest, row_i);
+
+    // set for next loop
+    internalStateForTree.checkClosedMode = setting.nextCheckClosedMode;
+    internalStateForTree.parentNest = setting.nextParentNest;
+
+    return (
+      <DataRow
+        key={row_i}
+        rowIndex={row_i}
+        isClosed={setting.isClosed}
+        isParentOfClosed={setting.isParentOfClosed}
+        cells={r.data}
+        nest={r.nest}
+        nextNest={this.props.rows[row_i + 1] && this.props.rows[row_i + 1].nest}
+        editableIndex={this.state.editableIndex}
+        inputSpaceIndex={this.state.inputSpaceIndex}
+        pageVersion={this.state.version}
+        toggleTreeFunc={this.functions.toggleTree}
+        callBackWhenEditableAction={this.props.callBackWhenEditableAction}
+        callBackWhenInputSpaceAction={this.props.callBackWhenInputSpaceAction}
+      />
+    );
+  }
 
   render() {
+    let internalStateForTree = {
+      checkClosedMode: false,
+      parentNest: null
+    };
     let checkClosedMode = false;
     let parentNest = null;
 
@@ -517,28 +509,6 @@ class DataTable extends Component {
                   sortColumnKey={this.state.sortColumnKey}
                   whenSortButtonClick={this.functions.toggleSortingWithKey}
                 />
-
-                {/*
-                <tr ref={this.headerRowNode}>
-                  {eachWithIndex(this.props.columns, (col, idx) => {
-                    return (
-                      <td
-                        key={"" + idx}
-                        className="header-column"
-                        style={{
-                          width:
-                            this.state.headerCellsWidthList &&
-                            "" + this.state.headerCellsWidthList[idx] + "px"
-                        }}
-                      >
-                        {/* Each cell's content should be same between real header row and dummy header row */
-                /*}
-                        {col}
-                      </td>
-                    );
-                  })}
-                </tr>
-                */}
               </tbody>
             </table>
 
@@ -567,72 +537,43 @@ class DataTable extends Component {
                   sortColumnKey={this.state.sortColumnKey}
                 />
 
-                {/*
-                <tr ref={this.dummyHeaderRowNode}>
-                  {eachWithIndex(this.props.columns, (col, idx) => {
-                    return (
-                      <td key={"" + idx} className="header-column-dummy">
-                        {/* Each cell's content should be same between real header row and dummy header row */
-                /*}
-                        {col && "SSS"}
-                      </td>
-                    );
-                  })}
-                </tr>
-                */}
-
-                {/* main data */}
-                {(() => {
-                  let func = (r, row_i) => {
-                    let setting = this.calcRowSetting(
-                      checkClosedMode,
-                      parentNest,
-                      r.nest,
-                      row_i
-                    );
-
-                    // set for next loop
-                    checkClosedMode = setting.nextCheckClosedMode;
-                    parentNest = setting.nextParentNest;
-
-                    return (
-                      <DataRow
-                        key={row_i}
-                        rowIndex={row_i}
-                        isClosed={setting.isClosed}
-                        isParentOfClosed={setting.isParentOfClosed}
-                        cells={r.data}
-                        nest={r.nest}
-                        nextNest={
-                          this.props.rows[row_i + 1] &&
-                          this.props.rows[row_i + 1].nest
-                        }
-                        editableIndex={this.state.editableIndex}
-                        inputSpaceIndex={this.state.inputSpaceIndex}
-                        pageVersion={this.state.version}
-                        toggleTreeFunc={this.functions.toggleTree}
-                        callBackWhenEditableAction={
-                          this.props.callBackWhenEditableAction
-                        }
-                        callBackWhenInputSpaceAction={
-                          this.props.callBackWhenInputSpaceAction
-                        }
-                      />
-                    );
-                  };
-                  if (this.state.sorted) {
-                    return this.state.sorted.map(i =>
-                      func(this.props.rows[i], i)
-                    );
-                  } else {
-                    return eachWithIndex(this.props.rows, func);
-                  }
-                })()}
+                {/* main data rows */}
+                {this.state.sorted
+                  ? this.state.sorted.map(i =>
+                      this.createDataRowDefinition(
+                        this.props.rows[i],
+                        i,
+                        internalStateForTree
+                      )
+                    )
+                  : eachWithIndex(this.props.rows, (row, rowIndex) =>
+                      this.createDataRowDefinition(
+                        row,
+                        rowIndex,
+                        internalStateForTree
+                      )
+                    )}
               </tbody>
             </table>
           </div>
         </div>
       </div>
+    );
+  }
+
+  /* for-debug area */
+
+  debugTime() {
+    let cur = new Date();
+    return cur.getTime() - this.debugStartDate.getTime();
+  }
+
+  debugCurrent(msg) {
+    console.log(
+      msg,
+      this.debugTime(),
+      (this.props.rows || []).length,
+      this.heightBeforeRender
     );
   }
 }
