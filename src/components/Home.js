@@ -49,43 +49,6 @@ class Home extends Component {
   static getDerivedStateFromProps(nextProps, prevState) {
     return null;
   }
-  debugInsertDataToTable() {
-    /* inserting test */
-    /*
-    setTimeout(() => {
-      let rows = [
-        { data: ["ID0", 1091, "123456789123456789", "a"] },
-        { nest: 1, data: ["ID1", 3, 4, null] }
-      ];
-      this.setState({ tableRows: rows });
-    }, 500);
-    */
-    setTimeout(() => {
-      let rows = [];
-      rows.push({ nest: 0, data: ["ID0", 3, 4, 5, 0, 1] });
-
-      let prevNest = 0;
-      while (rows.length < 30) {
-        let nest = getRandomInt(prevNest + 1);
-        if (nest === prevNest) {
-          nest = prevNest + 1;
-        }
-        rows.push({
-          nest: nest,
-          data: [
-            "ID" + rows.length,
-            3,
-            4,
-            5,
-            getRandomInt(100),
-            getRandomInt(100)
-          ]
-        });
-        prevNest = nest;
-      }
-      this.setState({ tableRows: rows });
-    }, 600);
-  }
   onSearch() {
     let url =
       Math.random() > 0.5
@@ -202,6 +165,45 @@ class Home extends Component {
         </div>
       </div>
     );
+  }
+  debugInsertDataToTable() {
+    /* inserting test */
+    /*
+    setTimeout(() => {
+      let rows = [
+        { data: ["ID0", 1091, "123456789123456789", "a"] },
+        { nest: 1, data: ["ID1", 3, 4, null] }
+      ];
+      this.setState({ tableRows: rows });
+    }, 500);
+    */
+    setTimeout(() => {
+      let rows = [];
+
+      let isFirst = true;
+      let prevNest = 0;
+      while (rows.length < 30) {
+        let nest = getRandomInt(prevNest + 1);
+        if (nest === prevNest) {
+          nest = prevNest + 1;
+        }
+        rows.push({
+          nest: isFirst ? 0 : nest,
+          data: [
+            "ID" + rows.length,
+            3,
+            4,
+            5,
+            getRandomInt(100),
+            getRandomInt(100),
+            getRandomInt(100)
+          ]
+        });
+        prevNest = nest;
+        isFirst = false;
+      }
+      this.setState({ tableRows: rows });
+    }, 600);
   }
 }
 
