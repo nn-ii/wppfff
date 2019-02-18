@@ -42,8 +42,6 @@ class Home extends PureComponent {
 
     //this.setVariableHeightStart();
 
-    this.debugInsertDataToTable();
-
     [
       "onSearch",
       "formSelectAAAAOnChange",
@@ -52,6 +50,9 @@ class Home extends PureComponent {
     ].forEach(methodName => {
       this[methodName] = this[methodName].bind(this);
     });
+
+    /* for testing */
+    setTimeout(() => this.debugInsertDataToTable(10), 0);
   }
   static getDerivedStateFromProps(nextProps, prevState) {
     return null;
@@ -192,9 +193,13 @@ class Home extends PureComponent {
             <label>
               Count:
               <input
-                value={this.state.formCountValue}
+                value={this.state.formCountValue || ""}
                 onChange={e => {
-                  this.setState({ formCountValue: e.target.value });
+                  this.setState({
+                    formCountValue: e.target.value,
+                    formCountValidity:
+                      e.target.value.match(/^\d+$/) && e.target.value <= 3000
+                  });
                 }}
               />
             </label>
@@ -207,13 +212,16 @@ class Home extends PureComponent {
               Search
             </a>
             <a
-              className="btn blue for-operation"
+              className={
+                "btn blue for-operation" +
+                (this.state.formCountValidity ? "" : " disabled")
+              }
               style={{ position: "relative", top: "80px" }}
               onClick={() => {
                 this.debugInsertDataToTable(this.state.formCountValue);
               }}
             >
-              Debug Load
+              Test Load
             </a>
           </form>
         </div>
@@ -272,9 +280,9 @@ class Home extends PureComponent {
         nest: isFirst ? 0 : nest,
         data: [
           "ID" + rows.length,
-          3,
-          4,
-          5,
+          "edi" + getRandomInt(100),
+          "XXX" + getRandomInt(100),
+          "aaa",
           getRandomInt(100),
           getRandomInt(100),
           getRandomInt(100)

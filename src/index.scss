@@ -28,6 +28,16 @@
     &:hover {
       background: #3566b7;
     }
+
+    &.disabled {
+      cursor: default;
+      color: #fff;
+      background: gray;
+      transition: 0s;
+      &:hover {
+        background: gray;
+      }
+    }
   }
 
   &.in-menu-tab {
