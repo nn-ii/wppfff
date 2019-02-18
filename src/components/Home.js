@@ -14,14 +14,21 @@ class Home extends Component {
 
     this.ConstTableColumns = [
       "id",
-      { value: "AAA", children: [{ id: "PPPPInput", value: "PPPP" }, "PPPP"] },
+      {
+        value: "AAA",
+        children: [
+          { id: "PPPPInput", value: "PPPP" },
+          { id: "PPPPSort", value: "PPPP" },
+          "PPPP"
+        ]
+      },
       "editable",
       "random1",
       "random2"
     ];
     this.ConstTableEditableIndices = ["editable"];
     this.ConstTableInputSpaceIndices = ["PPPPInput"];
-    this.ConstTableSortableIndices = ["random1", "random2"];
+    this.ConstTableSortableIndices = ["random1", "random2", "PPPPSort"];
 
     this.state = {
       tableRows: [],
