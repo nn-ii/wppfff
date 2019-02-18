@@ -262,7 +262,7 @@ class DataTable extends Component {
   };
 
   toggleTree(row_i) {
-    let closedParent = Object.assign({}, this.state.closedParent);
+    let closedParent = Object.assign({}, this.state.closedParent); // state is immutable
 
     if (row_i in closedParent) {
       delete closedParent[row_i];
@@ -270,6 +270,8 @@ class DataTable extends Component {
       closedParent[row_i] = true;
     }
     this.setState({ closedParent });
+
+    console.log("toggletree", closedParent);
   }
 
   adjustHeaderRelatedValues() {
@@ -473,6 +475,14 @@ class DataTable extends Component {
     this.toggleSorting(this.createMapKeyToFlattenIndex()[key]);
     this.setState({ sortColumnKey: key });
   }
+  whenEditableAction(rowIndex, colIndex, summary) {
+    console.log(this);
+    console.log("whenEditableAction", rowIndex, colIndex, summary);
+  }
+  whenInputSpaceAction(rowIndex, colIndex, summary) {
+    console.log(this);
+    console.log("whenInputSpaceAction", rowIndex, colIndex, summary);
+  }
 
   render() {
     let checkClosedMode = false;
@@ -603,34 +613,12 @@ class DataTable extends Component {
                         editableIndex={this.state.editableIndex}
                         inputSpaceIndex={this.state.inputSpaceIndex}
                         pageVersion={this.state.version}
-                        toggleTreeFunc={rowIndex => this.toggleTree(rowIndex)}
+                        toggleTreeFunc={rowIndex => this.toggleTree(row_i)}
                         toggleSortingFunc={colIndex =>
                           this.toggleSorting(colIndex)
                         }
-                        callBackWhenEditableAction={
-                          this.state.editableIndex &&
-                          this.state.editableIndex.length > 0 &&
-                          ((rowIndex, colIndex, summary) => {
-                            console.log(
-                              "callBackWhenEditableAction",
-                              rowIndex,
-                              colIndex,
-                              summary
-                            );
-                          })
-                        }
-                        callBackWhenInputSpaceAction={
-                          this.state.inputSpaceIndex &&
-                          this.state.inputSpaceIndex.length > 0 &&
-                          ((rowIndex, colIndex, summary) => {
-                            console.log(
-                              "callBackWhenInputSpaceAction",
-                              rowIndex,
-                              colIndex,
-                              summary
-                            );
-                          })
-                        }
+                        callBackWhenEditableAction={this.whenEditableAction}
+                        callBackWhenInputSpaceAction={this.whenInputSpaceAction}
                       />
                     );
                   };

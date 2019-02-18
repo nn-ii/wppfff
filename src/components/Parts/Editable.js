@@ -8,6 +8,7 @@ class Editable extends Component {
       version: 0,
       importantPropsSnapshot: { parentVersion: null }
     };
+    this.inputRef = null;
   }
   static getDerivedStateFromProps(nextProps, prevState) {
     let ret = commonGetDerivedStateFromProps(nextProps, prevState);
@@ -27,12 +28,13 @@ class Editable extends Component {
 
   render() {
     if (this.state.editing) {
+      this.inputRef = this.inputRef || React.createRef();
       return (
         <span>
           <input
             type="text"
-            value={this.state.value}
-            onChange={e => this.setState({ value: e.target.value })}
+            defaultValue={this.state.value}
+            ref={this.inputRef}
             onKeyPress={e => this.onKeyPress(e)}
           />
           <button
@@ -73,9 +75,11 @@ class Editable extends Component {
     this.whenFinish();
   }
   whenFinish() {
+    let value = this.inputRef.current.value;
     let tmp = {
       editing: false,
-      changed: this.state.initialValue !== this.state.value
+      value: value,
+      changed: this.state.initialValue !== value
     };
     this.setState(tmp);
     this.props.callBackWhenEditableAction(Object.assign({}, this.state, tmp));

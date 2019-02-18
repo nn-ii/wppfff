@@ -28,10 +28,10 @@ class DataRow extends Component {
           return (
             <Cell
               key={i}
+              rowIndex={this.props.rowIndex}
               index={i}
               type={type}
               content={c}
-              rowIndex={this.props.index}
               nest={this.props.nest}
               nextNest={this.props.nextNest}
               rowIsParentOfClosed={this.props.isParentOfClosed}
