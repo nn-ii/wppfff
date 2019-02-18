@@ -80,8 +80,8 @@ class App extends Component {
   setMainVisibleSizeStart() {
     this.setMainVisibleSizeController = runWithInterval(500, resolve => {
       retryWithWait(50, 500, () => this.getRootStyle()).then(style => {
-        let currentVisibleWidth = withoutPx(style.width) - 50;
-        let currentVisibleHeight = withoutPx(style.height) - 80;
+        let currentVisibleWidth = withoutPx(style.width) - 52;
+        let currentVisibleHeight = withoutPx(style.height) - 95;
         if (
           this.state.toChildren.mainVisibleHeight !== currentVisibleHeight ||
           this.state.toChildren.mainVisibleWidth !== currentVisibleWidth
@@ -224,7 +224,7 @@ class App extends Component {
             top: headerHeight,
             left: menuWidth,
             width: `calc(100% - ${menuWidth})`,
-            height: `calc(100% - ${headerHeight} - ${messageAreaHeight})`
+            height: `calc(100% - ${headerHeight} - ${messageAreaHeight} - 10px)`
           }}
         >
           <Main fromRoot={this.state.toChildren} />
