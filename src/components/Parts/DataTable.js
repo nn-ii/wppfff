@@ -225,13 +225,21 @@ class DataTable extends Component {
     setTimeout(() => this.setState(toSetState), 1);
   }
   setScrollTopStart() {
-    this.setScrollTopController = runWithInterval(500, resolve => {
+    let debouncedSetState = debounce(1200, nextScrollTop => {
+      this.setState({
+        scrollTop: nextScrollTop
+      });
+    });
+    let tmpScrollTop;
+    this.setScrollTopController = runWithInterval(400, resolve => {
       retryWithWait(50, 500, () => this.scrollableNode.current.scrollTop).then(
-        current => {
-          if (this.state.scrollTop !== current) {
-            this.setState({
-              scrollTop: current
-            });
+        currentScrollTop => {
+          if (
+            this.state.scrollTop !== currentScrollTop &&
+            tmpScrollTop !== currentScrollTop
+          ) {
+            debouncedSetState(currentScrollTop);
+            tmpScrollTop = currentScrollTop;
           }
 
           resolve();
