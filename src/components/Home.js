@@ -189,13 +189,31 @@ class Home extends Component {
                 selectedItem={this.state.formSelectBBBBValue || "All"}
               />
             </label>
+            <label>
+              Count:
+              <input
+                value={this.state.formCountValue}
+                onChange={e => {
+                  this.setState({ formCountValue: e.target.value });
+                }}
+              />
+            </label>
 
             <a
               className="btn blue for-operation"
-              style={{ position: "relative", top: "80px" }}
+              style={{ position: "relative", top: "40px" }}
               onClick={this.onSearch}
             >
               Search
+            </a>
+            <a
+              className="btn blue for-operation"
+              style={{ position: "relative", top: "80px" }}
+              onClick={() => {
+                this.debugInsertDataToTable(this.state.formCountValue);
+              }}
+            >
+              Debug Load
             </a>
           </form>
         </div>
@@ -233,7 +251,7 @@ class Home extends Component {
       </div>
     );
   }
-  debugInsertDataToTable() {
+  debugInsertDataToTable(count) {
     /* inserting test */
     /*
     setTimeout(() => {
@@ -244,33 +262,28 @@ class Home extends Component {
       this.setState({ tableRows: rows });
     }, 500);
     */
-    setTimeout(() => {
-      let rows = [];
+    let rows = [];
 
-      let isFirst = true;
-      let prevNest = 0;
-      while (rows.length < 30) {
-        let nest = getRandomInt(prevNest + 1);
-        if (nest === prevNest) {
-          nest = prevNest + 1;
-        }
-        rows.push({
-          nest: isFirst ? 0 : nest,
-          data: [
-            "ID" + rows.length,
-            3,
-            4,
-            5,
-            getRandomInt(100),
-            getRandomInt(100),
-            getRandomInt(100)
-          ]
-        });
-        prevNest = nest;
-        isFirst = false;
-      }
-      this.setState({ tableRows: rows });
-    }, 600);
+    let isFirst = true;
+    let prevNest = 0;
+    while (rows.length < count) {
+      let nest = Math.min(getRandomInt(prevNest + 1 + 3), prevNest + 1, 4);
+      rows.push({
+        nest: isFirst ? 0 : nest,
+        data: [
+          "ID" + rows.length,
+          3,
+          4,
+          5,
+          getRandomInt(100),
+          getRandomInt(100),
+          getRandomInt(100)
+        ]
+      });
+      prevNest = nest;
+      isFirst = false;
+    }
+    this.setState({ tableRows: rows });
   }
 }
 
