@@ -186,7 +186,7 @@ class Home extends Component {
         <div
           style={{
             position: "absolute",
-            height: "calc(100% - 190px)",
+            height: "calc(100% - 198px)",
             width: "100%"
           }}
         >
