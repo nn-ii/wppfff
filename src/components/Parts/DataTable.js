@@ -59,6 +59,7 @@ class DataTable extends Component {
       toggleTree: i => this.toggleTree(i),
       toggleSortingWithKey: i => this.toggleSortingWithKey(i)
     };
+    this.heavyOperation = null;
 
     this.debugStartDate = new Date();
   }
@@ -95,7 +96,7 @@ class DataTable extends Component {
     this.componentDidUpdate();
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps, prevState) {
     // 1. adjusting header cells' width, and rows' width and height
     this.adjustHeaderRelatedValuesThrottle();
 
@@ -104,7 +105,20 @@ class DataTable extends Component {
     if (this.state.lockForAdjustFixedHeight) {
       this.adjustFixedHeight();
     }
+
+    //
+
     this.setIndices();
+
+    if (
+      prevState &&
+      !prevState.runnningHeavyOperation &&
+      this.state &&
+      this.state.runnningHeavyOperation
+    ) {
+      this.heavyOperation();
+      this.heavyOperation = null;
+    }
   }
 
   componentWillUnmount() {
@@ -425,11 +439,18 @@ class DataTable extends Component {
       return i.rowIndex;
     });
 
-    this.setState({
-      sorted: orderList,
-      sortReversed: toReverse || false,
-      sortColumnIndex: colIndex
-    });
+    this.debugCurrent("start heavy");
+    this.heavyOperation = () => {
+      this.setState({
+        sorted: orderList,
+        sortReversed: toReverse || false,
+        sortColumnIndex: colIndex,
+
+        // for testing
+        runnningHeavyOperation: false
+      });
+    };
+    this.setState({ runnningHeavyOperation: true });
   }
   toggleSorting(colIndex) {
     if (this.state.sorted === null) {
@@ -569,6 +590,17 @@ class DataTable extends Component {
               </tbody>
             </table>
           </div>
+        </div>
+        <div
+          style={{
+            position: "absolute",
+            size: "40px",
+            top: "40px",
+            zIndex: "30",
+            display: this.state.runnningHeavyOperation || "none"
+          }}
+        >
+          In progress ....
         </div>
       </div>
     );
