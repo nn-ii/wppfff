@@ -86,6 +86,7 @@ class DataTable extends PureComponent {
         sorted: null,
         sortReversed: null,
         sortColumnIndex: null,
+        heavyOperationStatus: 0,
 
         /* below will be calculated late */
         editableIndex: null,
@@ -99,7 +100,7 @@ class DataTable extends PureComponent {
     this.componentDidUpdate();
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps, prevState) {
     // 1. adjusting header cells' width, and rows' width and height
     this.adjustHeaderRelatedValuesThrottle();
 
@@ -112,6 +113,8 @@ class DataTable extends PureComponent {
     //
 
     this.setIndicesIfNeeded();
+
+    this.controlHeavyOperation(prevState);
   }
 
   componentWillUnmount() {
@@ -430,7 +433,37 @@ class DataTable extends PureComponent {
     );
   }
 
-  setSortedState(colIndex, toReverse) {
+  startHeavyOperation(func) {
+    this.setState({
+      heavyOperationStatus: 1
+    });
+
+    let heavyOperationControlRelated = {
+      heavyOperationStatus: 2
+    };
+    this.heavyOperationToDo = () => {
+      func(heavyOperationControlRelated);
+    };
+  }
+
+  controlHeavyOperation(prevState) {
+    let current = this.state.heavyOperationStatus;
+    if (current === 0) {
+      return;
+    }
+
+    let prev = prevState.heavyOperationStatus;
+    console.log("controlHeavyOperation", prev, current);
+
+    if (prev === 0 && current === 1) {
+      setTimeout(() => this.heavyOperationToDo(), 5);
+    } else if (prev === 1 && current === 2) {
+      this.heavyOperationToDo = null;
+      this.setState({ heavyOperationStatus: 0 });
+    }
+  }
+
+  calcSortedState(colIndex, toReverse) {
     let rev = 1;
     if (toReverse) {
       rev = -1;
@@ -456,25 +489,31 @@ class DataTable extends PureComponent {
       return i.rowIndex;
     });
 
-    this.setState({
+    return {
       sorted: orderList,
       sortReversed: toReverse || false,
       sortColumnIndex: colIndex
-    });
+    };
   }
   toggleSorting(colIndex) {
     console.log("toggleSorting", colIndex);
+    let toSet = {};
+
     if (this.state.sorted === null) {
-      this.setSortedState(colIndex, false);
+      toSet = this.calcSortedState(colIndex, false);
     } else if (this.state.sortColumnIndex === colIndex) {
       if (this.state.sortReversed === false) {
-        this.setSortedState(colIndex, true);
+        toSet = this.calcSortedState(colIndex, true);
       } else {
-        this.setState({ sorted: null, sortReversed: null });
+        toSet = { sorted: null, sortReversed: null };
       }
     } else {
-      this.setSortedState(colIndex, false);
+      toSet = this.calcSortedState(colIndex, false);
     }
+
+    this.startHeavyOperation(heavyOperationControlRelated => {
+      this.setState(Object.assign(toSet, heavyOperationControlRelated));
+    });
   }
   toggleSortingWithIndex(index) {
     // XXX createMapKeyToFlattenIndex runs each time => ineffective
@@ -613,6 +652,16 @@ class DataTable extends PureComponent {
               </tbody>
             </table>
           </div>
+        </div>
+        <div
+          style={{
+            fontSize: "500%",
+            position: "absolute",
+            top: "30px",
+            display: this.state.heavyOperationStatus === 0 ? "none" : undefined
+          }}
+        >
+          .....
         </div>
       </div>
     );
