@@ -199,19 +199,12 @@ class DataTable extends PureComponent {
     }
     return ret;
   }
-  static getKeyFromHeaderColumnItem(item) {
-    if (typeof item.id === "string") {
-      return item.id;
-    } else if (typeof item.value === "string") {
-      return item.value;
-    }
-  }
   createMapKeyToIndexOfLastItemList() {
     let lastItemList = this.listRefOfLastItemList.list;
     let ret = {};
 
     eachWithIndexNotMap(lastItemList, (item, index) => {
-      ret[this.constructor.getKeyFromHeaderColumnItem(item)] = index;
+      ret[Header.getKeyFromHeaderColumnItem(item)] = index;
     });
 
     return ret;

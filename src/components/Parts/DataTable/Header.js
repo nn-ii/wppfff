@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import DataTable from "../DataTable"; /// XXX: remove dependency
 import {
   eachWithIndex,
   eachWithIndexNotMap,
@@ -46,7 +45,7 @@ class Header extends Component {
       let mapKeyToIndexOfLastItemList = {};
       eachWithIndexNotMap(lastItemList, (item, index) => {
         mapKeyToIndexOfLastItemList[
-          DataTable.getKeyFromHeaderColumnItem(item)
+          Header.getKeyFromHeaderColumnItem(item)
         ] = index;
       });
 
@@ -192,6 +191,13 @@ class Header extends Component {
           }) + 1,
         children: list
       };
+    }
+  }
+  static getKeyFromHeaderColumnItem(item) {
+    if (typeof item.id === "string") {
+      return item.id;
+    } else if (typeof item.value === "string") {
+      return item.value;
     }
   }
 
