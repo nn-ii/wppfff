@@ -248,13 +248,19 @@ class DataTable extends PureComponent {
     setTimeout(() => this.setState(toSetState), 1);
   }
   setScrollTopStart() {
-    let debouncedSetState = debounce(1200, nextScrollTop => {
-      this.setState({
-        scrollTop: nextScrollTop
-      });
+    let debouncedSetState = debounce(400, toldScrollTop => {
+      retryWithWait(50, 500, () => this.scrollableNode.current.scrollTop).then(
+        currentScrollTop => {
+          if (currentScrollTop === toldScrollTop) {
+            this.setState({
+              scrollTop: toldScrollTop
+            });
+          }
+        }
+      );
     });
     let tmpScrollTop;
-    this.setScrollTopController = runWithInterval(400, resolve => {
+    this.setScrollTopController = runWithInterval(300, resolve => {
       retryWithWait(50, 500, () => this.scrollableNode.current.scrollTop).then(
         currentScrollTop => {
           if (
