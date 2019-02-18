@@ -270,8 +270,6 @@ class DataTable extends Component {
       closedParent[row_i] = true;
     }
     this.setState({ closedParent });
-
-    console.log("toggletree", closedParent);
   }
 
   adjustHeaderRelatedValues() {
