@@ -176,21 +176,6 @@ class Home extends Component {
             </a>
           </div>
         </div>
-        {/*
-        <div
-          style={{
-            height:
-              Math.max(
-                this.props.fromRoot.mainVisibleHeight - 130,
-                tableAreaMinHeight
-              ) + "px",
-            width:
-              Math.max(
-                this.props.fromRoot.mainVisibleWidth - 40,
-                tableAreaMinWidth
-              ) + "px"
-          }}
-        >*/}
         <div
           style={{
             position: "absolute",
