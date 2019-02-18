@@ -33,6 +33,11 @@ class Home extends Component {
     //this.setVariableHeightStart();
 
     this.debugInsertDataToTable();
+
+    this.functions = {
+      whenEditableAction: (i, j, k) => this.whenEditableAction(i, j, k),
+      whenInputSpaceAction: (i, j, k) => this.whenInputSpaceAction(i, j, k)
+    };
   }
   static getDerivedStateFromProps(nextProps, prevState) {
     return null;
@@ -118,6 +123,13 @@ class Home extends Component {
       });
     });
   }
+  whenEditableAction(rowIndex, colIndex, summary) {
+    console.log("whenEditableAction", rowIndex, colIndex, summary);
+  }
+  whenInputSpaceAction(rowIndex, colIndex, summary) {
+    console.log("whenInputSpaceAction", rowIndex, colIndex, summary);
+  }
+
   render() {
     let wholeMinHeight = 200;
     let tableMinHeight = 250;
@@ -192,6 +204,8 @@ class Home extends Component {
             editableIndices={this.ConstTableEditableIndices}
             inputSpaceIndices={this.ConstTableInputSpaceIndices}
             sortableIndices={this.ConstTableSortableIndices}
+            callBackWhenEditableAction={this.functions.whenEditableAction}
+            callBackWhenInputSpaceAction={this.functions.whenInputSpaceAction}
           />
         </div>
       </div>

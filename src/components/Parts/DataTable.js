@@ -57,6 +57,11 @@ class DataTable extends Component {
     });
 
     this.debugStartDate = new Date();
+
+    this.functions = {
+      toggleTree: i => this.toggleTree(i),
+      toggleSortingWithKey: i => this.toggleSortingWithKey(i)
+    };
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -475,14 +480,6 @@ class DataTable extends Component {
     this.toggleSorting(this.createMapKeyToFlattenIndex()[key]);
     this.setState({ sortColumnKey: key });
   }
-  whenEditableAction(rowIndex, colIndex, summary) {
-    console.log(this);
-    console.log("whenEditableAction", rowIndex, colIndex, summary);
-  }
-  whenInputSpaceAction(rowIndex, colIndex, summary) {
-    console.log(this);
-    console.log("whenInputSpaceAction", rowIndex, colIndex, summary);
-  }
 
   render() {
     let checkClosedMode = false;
@@ -518,7 +515,7 @@ class DataTable extends Component {
                   sorted={this.state.sorted}
                   sortReversed={this.state.sortReversed}
                   sortColumnKey={this.state.sortColumnKey}
-                  whenSortButtonClick={key => this.toggleSortingWithKey(key)}
+                  whenSortButtonClick={this.functions.toggleSortingWithKey}
                 />
 
                 {/*
@@ -613,12 +610,13 @@ class DataTable extends Component {
                         editableIndex={this.state.editableIndex}
                         inputSpaceIndex={this.state.inputSpaceIndex}
                         pageVersion={this.state.version}
-                        toggleTreeFunc={rowIndex => this.toggleTree(row_i)}
-                        toggleSortingFunc={colIndex =>
-                          this.toggleSorting(colIndex)
+                        toggleTreeFunc={this.functions.toggleTree}
+                        callBackWhenEditableAction={
+                          this.props.callBackWhenEditableAction
                         }
-                        callBackWhenEditableAction={this.whenEditableAction}
-                        callBackWhenInputSpaceAction={this.whenInputSpaceAction}
+                        callBackWhenInputSpaceAction={
+                          this.props.callBackWhenInputSpaceAction
+                        }
                       />
                     );
                   };
