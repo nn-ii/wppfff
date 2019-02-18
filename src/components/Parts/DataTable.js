@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { PureComponent } from "react";
 import { throttle, debounce } from "throttle-debounce";
 import {
   eachWithIndex,
@@ -12,7 +12,7 @@ import {
 import DataRow from "./DataTable/DataRow";
 import Header from "./DataTable/Header";
 
-class DataTable extends Component {
+class DataTable extends PureComponent {
   constructor() {
     super();
 
@@ -55,10 +55,13 @@ class DataTable extends Component {
       this.adjustHeaderRelatedValues();
     });
 
-    this.functions = {
-      toggleTree: i => this.toggleTree(i),
-      toggleSortingWithKey: i => this.toggleSortingWithKey(i)
-    };
+    [
+      "toggleTree",
+      "toggleSortingWithKey",
+      "callBackWhenEditableActionWrapper"
+    ].forEach(methodName => {
+      this[methodName] = this[methodName].bind(this);
+    });
 
     this.debugStartDate = new Date();
   }
@@ -95,7 +98,7 @@ class DataTable extends Component {
     this.componentDidUpdate();
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate() {
     // 1. adjusting header cells' width, and rows' width and height
     this.adjustHeaderRelatedValuesThrottle();
 
@@ -459,6 +462,13 @@ class DataTable extends Component {
     this.toggleSorting(this.createMapKeyToFlattenIndex()[key]);
     this.setState({ sortColumnKey: key });
   }
+  callBackWhenEditableActionWrapper(i, j, k) {
+    /* When Editable actions occuer, the cell's width may change.
+       We intercept so that that change will reflect DataTable's state by running this.adjustHeaderRelatedValuesThrottle()    
+  */
+    this.adjustHeaderRelatedValuesThrottle();
+    this.props.callBackWhenEditableAction();
+  }
   createDataRowDefinition(r, row_i, internalStateForTree) {
     let setting = this.calcRowSetting(internalStateForTree, r.nest, row_i);
 
@@ -478,8 +488,8 @@ class DataTable extends Component {
         editableIndex={this.state.editableIndex}
         inputSpaceIndex={this.state.inputSpaceIndex}
         pageVersion={this.state.version}
-        toggleTreeFunc={this.functions.toggleTree}
-        callBackWhenEditableAction={this.props.callBackWhenEditableAction}
+        toggleTreeFunc={this.toggleTree}
+        callBackWhenEditableAction={this.callBackWhenEditableActionWrapper}
         callBackWhenInputSpaceAction={this.props.callBackWhenInputSpaceAction}
       />
     );
@@ -531,7 +541,7 @@ class DataTable extends Component {
                   sorted={this.state.sorted}
                   sortReversed={this.state.sortReversed}
                   sortColumnKey={this.state.sortColumnKey}
-                  whenSortButtonClick={this.functions.toggleSortingWithKey}
+                  whenSortButtonClick={this.toggleSortingWithKey}
                 />
               </tbody>
             </table>

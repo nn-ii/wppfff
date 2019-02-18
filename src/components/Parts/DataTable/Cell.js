@@ -3,7 +3,7 @@ import ToggleButton from "./ToggleButton";
 import Editable from "../Editable";
 import InputSpace from "../InputSpace";
 
-const Cell = props => {
+const Cell = React.memo(props => {
   let toggleButton, paddingLeft;
   if (props.index === 0) {
     toggleButton = (
@@ -50,6 +50,6 @@ const Cell = props => {
       {inner}
     </td>
   );
-};
+});
 
 export default Cell;

@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { PureComponent } from "react";
 import DataTable from "./Parts/DataTable";
 import FormSelect from "./Parts/FormSelect";
 import Modal from "./Parts/Modal";
@@ -10,7 +10,7 @@ import {
 } from "./Util";
 import axios from "axios";
 
-class Home extends Component {
+class Home extends PureComponent {
   constructor() {
     super();
 

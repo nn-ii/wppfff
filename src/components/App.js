@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { PureComponent } from "react";
 import Main from "./Main";
 import MenuTab from "./MenuTab";
 import ToolTableCell from "./Parts/ToolTableCell";
@@ -6,7 +6,7 @@ import "../index.scss";
 import { retryWithWait, zeroPadding, withoutPx, runWithInterval } from "./Util";
 import { throttle } from "throttle-debounce";
 
-class App extends Component {
+class App extends PureComponent {
   constructor() {
     super();
     this.state = {
@@ -30,7 +30,7 @@ class App extends Component {
 
     this.setDateTimeId = setInterval(() => {
       this.setDateTime();
-    }, 100);
+    }, 3000);
   }
   componentWillUnmount() {
     this.setMainVisibleSizeController.clear();
@@ -214,12 +214,18 @@ class App extends Component {
         {/* content */}
         <div
           className="main-content"
-          onMouseEnter={() => {
-            this.setState({ showingMenu: false });
-          }}
-          onMouseMove={() => {
-            this.setState({ showingMenu: false });
-          }}
+          onMouseEnter={
+            this.state.showingMenu &&
+            (() => {
+              this.setState({ showingMenu: false });
+            })
+          }
+          onMouseMove={
+            this.state.showingMenu &&
+            (() => {
+              this.setState({ showingMenu: false });
+            })
+          }
           style={{
             top: headerHeight,
             left: menuWidth,

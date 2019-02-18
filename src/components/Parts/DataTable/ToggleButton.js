@@ -1,6 +1,6 @@
 import React from "react";
 
-const ToggleButton = props => {
+const ToggleButton = React.memo(props => {
   let hasChildren = (props.nextNest || 0) > (props.nest || 0);
   let isDisabled = !hasChildren || props.lockForAdjustFixedHeight;
   let onClick = isDisabled
@@ -22,6 +22,6 @@ const ToggleButton = props => {
       {props.rowIsParentOfClosed ? ">" : "v"}
     </button>
   );
-};
+});
 
 export default ToggleButton;
