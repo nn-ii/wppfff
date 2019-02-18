@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import DataTable from "./Parts/DataTable";
+import FormSelect from "./Parts/FormSelect";
+import Modal from "./Parts/Modal";
 import {
   getRandomInt,
   retryWithWait,
@@ -33,7 +35,8 @@ class Home extends Component {
     this.state = {
       tableRows: [],
       variableHeight: 0,
-      loading: false
+      loading: false,
+      errorMessage: null
     };
     this.variableHeightNode = React.createRef();
 
@@ -41,15 +44,25 @@ class Home extends Component {
 
     this.debugInsertDataToTable();
 
-    this.functions = {
-      whenEditableAction: (i, j, k) => this.whenEditableAction(i, j, k),
-      whenInputSpaceAction: (i, j, k) => this.whenInputSpaceAction(i, j, k)
-    };
+    [
+      "onSearch",
+      "formSelectAAAAOnChange",
+      "whenEditableAction",
+      "whenInputSpaceAction"
+    ].forEach(methodName => {
+      this[methodName] = this[methodName].bind(this);
+    });
   }
   static getDerivedStateFromProps(nextProps, prevState) {
     return null;
   }
-  onSearch() {
+  componentWillUnmount() {
+    this.setVariableHeightController &&
+      this.setVariableHeightController.clear();
+  }
+  onSearch(event) {
+    event.preventDefault();
+
     let url =
       Math.random() > 0.5
         ? "https://reqres.in/api/users" /* will success */
@@ -70,12 +83,35 @@ class Home extends Component {
         });
       })
       .catch(err => {
-        this.props.fromRoot.addMessage("Request error: search");
+        //this.props.fromRoot.addMessage("Request error: search");
         this.setState({
           loading: false,
-          tableRows: []
+          tableRows: [],
+          errorMessage: "Search request error"
         });
       });
+  }
+  formSelectAAAAOnChange(e) {
+    if (e.target.value === this.state.formSelectAAAAValue) {
+      return;
+    }
+
+    let stateToSet = { formSelectAAAAValue: e.target.value };
+    if (e.target.value === "All") {
+      stateToSet.formSelectBBBBOptions = ["All"];
+      stateToSet.formSelectBBBBValue = "All";
+    } else if (e.target.value === "House") {
+      stateToSet.formSelectBBBBOptions = [{ value: "nothing", text: "-" }];
+      stateToSet.formSelectBBBBValue = "nothing";
+    } else if (e.target.value === "Affiliate") {
+      stateToSet.formSelectBBBBOptions = ["All", "Affiliate X", "Affiliate Y"];
+      stateToSet.formSelectBBBBValue = "All";
+    } else if (e.target.value === "Client") {
+      stateToSet.formSelectBBBBOptions = ["All", "Client X", "Client Y"];
+      stateToSet.formSelectBBBBValue = "All";
+    }
+
+    this.setState(stateToSet);
   }
   setVariableHeightStart() {
     this.setVariableHeightController = runWithInterval(500, resolve => {
@@ -125,31 +161,48 @@ class Home extends Component {
             overflowWrap: "break-word"
           }}
         >
-          {(() => {
-            let list = [];
-            for (let i = 0; i < 10; i++) {
-              list.push(
-                <span style={{ display: "inline-block", marginRight: "30px" }}>
-                  ABCDEFG
-                </span>
-              );
-            }
-            return list;
-          })()}
+          <form>
+            <label style={{ marginRight: "10px" }}>
+              AAAA:
+              <FormSelect
+                options={[
+                  { value: "All", text: "All " },
+                  "House",
+                  "Affiliate",
+                  "Client"
+                ]}
+                callbackOnChange={this.formSelectAAAAOnChange}
+                selectedItem={
+                  typeof this.state.formSelectAAAAValue === "string"
+                    ? this.state.formSelectAAAAValue
+                    : "All"
+                }
+              />
+            </label>
+            <label>
+              BBBB:
+              <FormSelect
+                options={this.state.formSelectBBBBOptions || ["All"]}
+                callbackOnChange={e =>
+                  this.setState({ formSelectBBBBValue: e.target.value })
+                }
+                selectedItem={this.state.formSelectBBBBValue || "All"}
+              />
+            </label>
 
-          <div style={{ display: "inline-block", marginBottom: "10px" }}>
             <a
               className="btn blue for-operation"
-              onClick={() => this.onSearch()}
+              style={{ position: "relative", top: "80px" }}
+              onClick={this.onSearch}
             >
               Search
             </a>
-          </div>
+          </form>
         </div>
         <div
           style={{
             position: "absolute",
-            height: "calc(100% - 198px)",
+            height: "calc(100% - 185px)",
             width: "100%"
           }}
         >
@@ -159,10 +212,24 @@ class Home extends Component {
             editableIndices={this.ConstTableEditableIndices}
             inputSpaceIndices={this.ConstTableInputSpaceIndices}
             sortableIndices={this.ConstTableSortableIndices}
-            callBackWhenEditableAction={this.functions.whenEditableAction}
-            callBackWhenInputSpaceAction={this.functions.whenInputSpaceAction}
+            callBackWhenEditableAction={this.whenEditableAction}
+            callBackWhenInputSpaceAction={this.whenInputSpaceAction}
           />
         </div>
+
+        {this.state.errorMessage && (
+          <Modal
+            title="Error"
+            content={
+              <div>
+                {this.state.errorMessage}
+                <button onClick={() => this.setState({ errorMessage: null })}>
+                  Close
+                </button>
+              </div>
+            }
+          />
+        )}
       </div>
     );
   }

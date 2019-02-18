@@ -2,7 +2,7 @@ import React from "react";
 import PlayerAPI from "../api";
 import { Link } from "react-router-dom";
 import ToolOnOffSwitch from "./ToolOnOffSwitch";
-import Modal from "./Modal";
+import Modal from "./Parts/Modal";
 
 // The FullRoster iterates over all of the players and creates
 // a link to their profile page.

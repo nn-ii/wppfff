@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import Main from "./Main";
 import MenuTab from "./MenuTab";
-import ToolTableCell from "./ToolTableCell";
+import ToolTableCell from "./Parts/ToolTableCell";
 import "../index.scss";
 import { retryWithWait, zeroPadding, withoutPx, runWithInterval } from "./Util";
 import { throttle } from "throttle-debounce";

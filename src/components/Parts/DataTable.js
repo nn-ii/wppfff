@@ -483,14 +483,22 @@ class DataTable extends Component {
     let parentNest = null;
 
     return (
-      <div className="info-table-root" ref={this.scrollableNode}>
+      <div
+        className="info-table-root"
+        ref={this.scrollableNode}
+        style={{
+          position: "relative",
+          zIndex:
+            this.props.zIndex ||
+            1 /* intentionally specify zIndex so that a new `stack context` will be created */
+        }}
+      >
         <div
           className="wrapper-height-to-be-fixed"
           style={{
             height:
-              typeof this.state.fixedHeight === "number"
-                ? `${this.state.fixedHeight}px`
-                : ""
+              typeof this.state.fixedHeight === "number" &&
+              `${this.state.fixedHeight}px`
           }}
         >
           <div ref={this.flexibleInnerNode}>
