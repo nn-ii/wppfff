@@ -26,7 +26,8 @@ class Home extends PureComponent {
       },
       "editable",
       "random1",
-      "random2"
+      "random2",
+      { id: "random3", value: "random3________________________" }
     ];
     this.ConstTableEditableIndices = ["editable"];
     this.ConstTableInputSpaceIndices = ["PPPPInput"];
@@ -144,9 +145,9 @@ class Home extends PureComponent {
     return (
       <div
         style={{
-          height:
-            Math.max(this.props.fromRoot.mainVisibleHeight, wholeMinHeight) +
-            "px"
+          height: "100%"
+          /*Math.max(this.props.fromRoot.mainVisibleHeight, wholeMinHeight) +
+            "px"*/
         }}
       >
         <div
@@ -157,78 +158,79 @@ class Home extends PureComponent {
 
         <div
           style={{
-            height: "130px",
+            height: "70px",
+            width: "100%",
             border: "1px solid black",
             overflowWrap: "break-word"
           }}
         >
-          <form>
-            <label style={{ marginRight: "10px" }}>
-              AAAA:
-              <FormSelect
-                options={[
-                  { value: "All", text: "All " },
-                  "House",
-                  "Affiliate",
-                  "Client"
-                ]}
-                callbackOnChange={this.formSelectAAAAOnChange}
-                selectedItem={
-                  typeof this.state.formSelectAAAAValue === "string"
-                    ? this.state.formSelectAAAAValue
-                    : "All"
-                }
-              />
-            </label>
-            <label>
-              BBBB:
-              <FormSelect
-                options={this.state.formSelectBBBBOptions || ["All"]}
-                callbackOnChange={e =>
-                  this.setState({ formSelectBBBBValue: e.target.value })
-                }
-                selectedItem={this.state.formSelectBBBBValue || "All"}
-              />
-            </label>
-            <label>
-              Count:
-              <input
-                value={this.state.formCountValue || ""}
-                onChange={e => {
-                  this.setState({
-                    formCountValue: e.target.value,
-                    formCountValidity:
-                      e.target.value.match(/^\d+$/) && e.target.value <= 3000
-                  });
-                }}
-              />
-            </label>
-
-            <a
-              className="btn blue for-operation"
-              style={{ position: "relative", top: "40px" }}
-              onClick={this.onSearch}
-            >
-              Search
-            </a>
-            <a
-              className={
-                "btn blue for-operation" +
-                (this.state.formCountValidity ? "" : " disabled")
+          <label style={{ marginRight: "10px" }}>
+            AAAA:
+            <FormSelect
+              options={[
+                { value: "All", text: "All " },
+                "House",
+                "Affiliate",
+                "Client"
+              ]}
+              callbackOnChange={this.formSelectAAAAOnChange}
+              selectedItem={
+                typeof this.state.formSelectAAAAValue === "string"
+                  ? this.state.formSelectAAAAValue
+                  : "All"
               }
-              style={{ position: "relative", top: "80px" }}
-              onClick={() => {
-                this.debugInsertDataToTable(this.state.formCountValue);
+            />
+          </label>
+          <label>
+            BBBB:
+            <FormSelect
+              options={this.state.formSelectBBBBOptions || ["All"]}
+              callbackOnChange={e =>
+                this.setState({ formSelectBBBBValue: e.target.value })
+              }
+              selectedItem={this.state.formSelectBBBBValue || "All"}
+            />
+          </label>
+          <a
+            className="btn blue for-operation"
+            style={{ marginLeft: "10px" }}
+            onClick={this.onSearch}
+          >
+            Search
+          </a>
+
+          <label style={{ marginLeft: "20px" }}>
+            Count:
+            <input
+              value={this.state.formCountValue || ""}
+              onChange={e => {
+                this.setState({
+                  formCountValue: e.target.value,
+                  formCountValidity:
+                    e.target.value.match(/^\d+$/) && e.target.value <= 3000
+                });
               }}
-            >
-              Test Load
-            </a>
-          </form>
+            />
+          </label>
+
+          <a
+            className={
+              "btn blue for-operation" +
+              (this.state.formCountValidity ? "" : " disabled")
+            }
+            style={{ marginLeft: "10px" }}
+            onClick={() => {
+              this.debugInsertDataToTable(this.state.formCountValue);
+            }}
+          >
+            Test Load
+          </a>
         </div>
         <div
           style={{
-            position: "absolute",
-            height: "calc(100% - 185px)",
+            position: "relative",
+            marginTop: "10px",
+            height: "calc(100% - 150px)",
             width: "100%"
           }}
         >
@@ -241,6 +243,26 @@ class Home extends PureComponent {
             callBackWhenEditableAction={this.whenEditableAction}
             callBackWhenInputSpaceAction={this.whenInputSpaceAction}
           />
+        </div>
+        <div style={{ position: "relative", marginTop: "8px", width: "100%" }}>
+          <div style={{ position: "absolute", right: "5px" }}>
+            <a
+              className={"btn blue for-operation"}
+              onClick={() => {
+                alert("AAA");
+              }}
+            >
+              AAA
+            </a>{" "}
+            <a
+              className={"btn blue for-operation"}
+              onClick={() => {
+                alert("AAA");
+              }}
+            >
+              BBB
+            </a>
+          </div>
         </div>
 
         {this.state.errorMessage && (
@@ -285,7 +307,8 @@ class Home extends PureComponent {
           "aaa",
           getRandomInt(100),
           getRandomInt(100),
-          getRandomInt(100)
+          getRandomInt(100),
+          getRandomInt(10)
         ]
       });
       prevNest = nest;
