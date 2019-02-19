@@ -155,7 +155,9 @@ class Home extends PureComponent {
             height: "70px",
             width: "100%",
             border: "1px solid black",
-            overflowWrap: "break-word"
+            overflowWrap: "break-word",
+            paddingTop: "5px",
+            paddingLeft: "5px"
           }}
         >
           <label style={{ marginRight: "10px" }}>
