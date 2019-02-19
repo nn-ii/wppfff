@@ -143,13 +143,7 @@ class Home extends PureComponent {
     let tableMinHeight = 250;
 
     return (
-      <div
-        style={{
-          position: "absolute",
-          width: "100%",
-          height: "100%"
-        }}
-      >
+      <React.Fragment>
         <div
           className="loading-screen"
           style={{ display: this.state.loading || "none" }}
@@ -278,7 +272,7 @@ class Home extends PureComponent {
             }
           />
         )}
-      </div>
+      </React.Fragment>
     );
   }
   debugInsertDataToTable(count) {
