@@ -230,16 +230,16 @@ class App extends PureComponent {
           }
           style={{
             top: headerHeight,
-            left: menuWidth,
-            width: `calc(100% - ${menuWidth})`,
+            left: `calc(${menuWidth} + 10px)`,
+            width: `calc(100% - ${menuWidth} - 20px)`,
             height: `calc(100% - ${headerHeight} - ${messageAreaHeight} - 10px)`
           }}
         >
           <Main fromRoot={this.state.toChildren} />
         </div>
-        {/* header */}
+
+        {/* footer */}
         <div
-          id="header"
           style={{
             width: "100%",
             height: "30px",
@@ -249,7 +249,21 @@ class App extends PureComponent {
             bottom: "0px",
             left: "0px"
           }}
-        />
+        >
+          <div
+            style={{
+              height: "100%",
+              position: "absolute",
+              left: "50px",
+              fontSize: "60%"
+            }}
+          >
+            <ToolTableCell
+              content={`Copyright (C) Japan Securities Clearing Corporation. ALL RIGTHS
+            RESERVED`}
+            />
+          </div>
+        </div>
       </div>
     );
   }
