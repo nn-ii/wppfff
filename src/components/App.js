@@ -237,45 +237,19 @@ class App extends PureComponent {
         >
           <Main fromRoot={this.state.toChildren} />
         </div>
-
-        {/* message to user */}
+        {/* header */}
         <div
-          onClick={() => {
-            let messageAlreadyRead = this.state.messageAlreadyRead;
-            if (this.state.messageAreaExpanded) {
-              messageAlreadyRead = true;
-            }
-            this.setState({
-              messageAreaExpanded: !this.state.messageAreaExpanded,
-              messageAlreadyRead: messageAlreadyRead
-            });
-          }}
-          className={"messages " + (this.state.messageThin && "thin")}
+          id="header"
           style={{
-            position: "absolute",
-            bottom: 0,
-            left: menuWidth,
-            width: `calc(100% - ${menuWidth})`,
-            height: messageAreaHeight,
-            color: "white",
-
-            /* deliberately overwrite CSS style */
-            backgroundColor:
-              this.state.messages.length === 0 || this.state.messageAlreadyRead
-                ? "#e48181"
-                : ""
+            width: "100%",
+            height: "30px",
+            backgroundColor: "deepskyblue",
+            position: "fixed",
+            zIndex: "100",
+            bottom: "0px",
+            left: "0px"
           }}
-        >
-          {this.state.messageAreaExpanded ? (
-            <div>
-              {this.state.messages.map(m => {
-                return <div>{m}</div>;
-              })}
-            </div>
-          ) : (
-            <div>{this.state.messages.length} messages</div>
-          )}
-        </div>
+        />
       </div>
     );
   }
