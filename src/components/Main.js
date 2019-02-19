@@ -6,7 +6,7 @@ import Schedule from "./Schedule";
 
 const Main = props => (
   <Switch>
-    <Route exact path="/" render={() => <Home fromRoot={props.fromRoot} />} />
+    <Route exact path="/" component={Home} />
     <Route path="/roster" component={Roster} />
     <Route path="/schedule" component={Schedule} />
   </Switch>

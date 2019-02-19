@@ -85,7 +85,6 @@ class Home extends PureComponent {
         });
       })
       .catch(err => {
-        //this.props.fromRoot.addMessage("Request error: search");
         this.setState({
           loading: false,
           tableRows: [],
