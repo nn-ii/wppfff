@@ -232,7 +232,7 @@ class App extends PureComponent {
             top: headerHeight,
             left: `calc(${menuWidth} + 10px)`,
             width: `calc(100% - ${menuWidth} - 20px)`,
-            height: `calc(100% - ${headerHeight} - ${messageAreaHeight} - 10px)`
+            height: `calc(100% - ${headerHeight} - 23px)`
           }}
         >
           <Main fromRoot={this.state.toChildren} />
@@ -242,7 +242,7 @@ class App extends PureComponent {
         <div
           style={{
             width: "100%",
-            height: "30px",
+            height: "23px",
             backgroundColor: "deepskyblue",
             position: "fixed",
             zIndex: "100",
@@ -255,7 +255,7 @@ class App extends PureComponent {
               height: "100%",
               position: "absolute",
               left: "50px",
-              fontSize: "60%"
+              fontSize: "x-small"
             }}
           >
             <ToolTableCell
