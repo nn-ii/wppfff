@@ -335,6 +335,13 @@ class DataTable extends PureComponent {
         eachWithIndexNotMap(row, (col, colIndex) => {
           if (this.state.headerCellsWidthList[rowIndex]) {
             if (this.state.headerCellsWidthList[rowIndex][colIndex] !== col) {
+              console.log(
+                "DIFF",
+                rowIndex,
+                colIndex,
+                col,
+                this.state.headerCellsWidthList[rowIndex][colIndex]
+              );
               anyWidthChanged = true;
             }
           } else {
@@ -345,6 +352,18 @@ class DataTable extends PureComponent {
       if (anyWidthChanged) {
         willBeMerged.headerCellsWidthList = widthList;
       }
+      console.log(
+        "AAAAAAA",
+        widthList,
+        willBeMerged,
+        willBeMerged.headerCellsWidthList &&
+          willBeMerged.headerCellsWidthList.length
+      );
+      console.log(
+        "BBBBBB",
+        JSON.stringify([this.state.headerCellsWidthList, widthList]),
+        this.state.version
+      );
 
       /*
       let dummyRowStyle = document.defaultView.getComputedStyle(dummyRow);
@@ -557,6 +576,11 @@ class DataTable extends PureComponent {
         editableIndex={this.state.editableIndex}
         inputSpaceIndex={this.state.inputSpaceIndex}
         pageVersion={this.state.version}
+        toggleEnabled={
+          this.props.toggleEnabled === undefined
+            ? true
+            : this.props.toggleEnabled
+        }
         toggleTreeFunc={this.toggleTree}
         callBackWhenEditableAction={this.callBackWhenEditableActionWrapper}
         callBackWhenInputSpaceAction={this.callBackWhenInputSpaceActionWrapper}
@@ -572,7 +596,12 @@ class DataTable extends PureComponent {
 
     return (
       <div
-        className="info-table-root"
+        className={
+          "info-table-root" +
+          (this.props.scrollable || this.props.scrollable === undefined
+            ? " scrollable"
+            : "")
+        }
         ref={this.scrollableNode}
         style={{
           position: "relative",
@@ -585,8 +614,10 @@ class DataTable extends PureComponent {
           className="wrapper-height-to-be-fixed"
           style={{
             height:
-              typeof this.state.fixedHeight === "number" &&
-              `${this.state.fixedHeight}px`
+              this.props.scrollable &&
+              typeof this.state.fixedHeight === "number"
+                ? `${this.state.fixedHeight}px`
+                : undefined
           }}
         >
           <div ref={this.flexibleInnerNode}>

@@ -114,7 +114,7 @@ class App extends PureComponent {
           style={{
             width: "100%",
             height: headerHeight,
-            backgroundColor: "deepskyblue",
+            backgroundColor: "#87cefa",
             position: "fixed",
             zIndex: "100",
             top: "0px",
@@ -178,7 +178,7 @@ class App extends PureComponent {
           style={{
             width: this.state.showingMenu ? "270px" : menuWidth,
             height: "100%",
-            backgroundColor: "deepskyblue",
+            backgroundColor: "#87cefa",
             position: "fixed",
             zIndex: "100",
             top: headerHeight,
@@ -243,7 +243,7 @@ class App extends PureComponent {
           style={{
             width: "100%",
             height: "23px",
-            backgroundColor: "deepskyblue",
+            backgroundColor: "#87cefa",
             position: "fixed",
             zIndex: "100",
             bottom: "0px",

@@ -27,7 +27,12 @@ class MenuTab extends BaseTab {
         content: this.createMenusTab([
           { to: "/", text: "Home" },
           { to: "/roster", text: "Roster" },
-          { to: "/schedule", text: "Schedule" }
+          { to: "/schedule", text: "Schedule" },
+          { to: "/layout1x2", text: "Layout1x2" },
+          {
+            to: "/collateral_instruction_cash",
+            text: "Collateral Instruction Cash"
+          }
         ])
       },
       { name: "LSD", content: <div>LSD Content!</div> }

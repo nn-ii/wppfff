@@ -1,3 +1,6 @@
+#root {
+  font-family: "Arial";
+}
 .root {
   position: fixed;
   top: 0;
@@ -20,9 +23,9 @@
   padding: 0.25em 0.5em;
   text-decoration: none;
   cursor: pointer;
+  color: #fff;
 
   &.blue {
-    color: #fff;
     background: #1153bf;
     transition: 0.1s;
     &:hover {
@@ -31,13 +34,29 @@
 
     &.disabled {
       cursor: default;
-      color: #fff;
       background: gray;
       transition: 0s;
       &:hover {
         background: gray;
       }
     }
+  }
+
+  &.green {
+    background-color: #5dcc41;
+    transition: 0.1s;
+    &:hover {
+      background-color: #7ae65f;
+    }
+  }
+
+  &.wider1 {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  &.font-black {
+    color: black;
   }
 
   &.in-menu-tab {
@@ -68,8 +87,6 @@
   box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.3);
 }
 .info-table-root {
-  overflow-x: scroll;
-  overflow-y: scroll;
   display: inline-block;
   max-width: 100%;
   max-height: 100%;
@@ -85,6 +102,10 @@
     border-radius: 5px;
     box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.3);
   }
+  &.scrollable {
+    overflow-x: scroll;
+    overflow-y: scroll;
+  }
   .wrapper-height-to-be-fixed {
     display: inline-block;
     max-width: 10000px;
@@ -96,10 +117,8 @@
       border-left: solid 1px #c4c4c4;
       border-right: solid 1px #c4c4c4;
       border-bottom: solid 1px #c4c4c4;
-      padding-left: 6px;
-      padding-right: 12px;
+      padding: 5px 5px 5px 5px;
       white-space: nowrap;
-      height: 30px;
     }
   }
   .header-table {

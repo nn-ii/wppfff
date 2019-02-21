@@ -29,6 +29,7 @@ const DataRow = React.memo(props => (
           nextNest={props.nextNest}
           rowIsParentOfClosed={props.isParentOfClosed}
           pageVersion={props.pageVersion}
+          toggleEnabled={props.toggleEnabled}
           toggleTreeFunc={props.toggleTreeFunc}
           callBackWhenEditableAction={
             type === "editable" &&

@@ -25,10 +25,18 @@ export const getRandomInt = max => {
 
 export const commonGetDerivedStateFromProps = (nextProps, prevState) => {
   let keys = Object.keys(prevState.importantPropsSnapshot);
+
+  let tmp = keys.filter(key => {
+    return prevState.importantPropsSnapshot[key] === nextProps[key];
+  });
+
   if (
+    /*
     keys.filter(key => {
       return prevState.importantPropsSnapshot[key] === nextProps[key];
     }).length === keys.length
+    */
+    tmp.length === keys.length
   ) {
     return null;
   } else {

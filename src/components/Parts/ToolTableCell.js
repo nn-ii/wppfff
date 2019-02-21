@@ -11,11 +11,11 @@ const ToolTableCell = props => (
         display: "table-cell",
         width: "100%",
         verticalAlign: "middle",
-        textAlign: "center",
+        textAlign: props.textAlign ? props.textAlign : "center",
         height: "100%"
       }}
     >
-      {props.content}
+      {props.children || props.content}
     </div>
   </div>
 );

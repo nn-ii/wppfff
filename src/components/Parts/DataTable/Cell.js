@@ -5,7 +5,7 @@ import InputSpace from "../InputSpace";
 
 const Cell = React.memo(props => {
   let toggleButton, paddingLeft;
-  if (props.index === 0) {
+  if (props.index === 0 && props.toggleEnabled) {
     toggleButton = (
       <ToggleButton
         rowIndex={props.rowIndex}
