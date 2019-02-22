@@ -6,6 +6,7 @@ import Schedule from "./Schedule";
 import Layout1x2 from "./Page/Layout1x2";
 import CollateralInstructionCash from "./Page/CollateralInstructionCash";
 import CollateralTransfer from "./Page/CollateralTransfer";
+import CollateralInstructionStatus from "./Page/CollateralInstructionStatus";
 
 const Main = props => (
   <Switch>
@@ -18,6 +19,10 @@ const Main = props => (
       component={CollateralInstructionCash}
     />
     <Route path="/collateral_transfer" component={CollateralTransfer} />
+    <Route
+      path="/collateral_instruction_status"
+      component={CollateralInstructionStatus}
+    />
   </Switch>
 );
 

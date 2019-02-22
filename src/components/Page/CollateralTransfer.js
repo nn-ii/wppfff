@@ -54,7 +54,19 @@ class CollateralTransfer extends PureComponent {
     return (
       <React.Fragment>
         <div className="y-stack">
-          <h3 className="title">Collateral Transfer Across Silo</h3>
+          <XStack>
+            <h3 className="title" style={{ float: "left" }}>
+              Collateral Transfer Across Silo
+            </h3>
+            <img
+              style={{
+                float: "right",
+                marginTop: "8px"
+              }}
+              alt=""
+              src="https://uploads.codesandbox.io/uploads/user/b0e2d439-92ce-49c9-8acb-49d6d1c579a4/Yk09-reload.png"
+            />
+          </XStack>
           <XStack style={{ height: "calc(100% - 60px)" }}>
             <div
               className="y-stack"
@@ -75,10 +87,26 @@ class CollateralTransfer extends PureComponent {
                   toggleEnabled={false}
                 />
               </div>
-
-              <h4 className="title">Transfer To</h4>
+              <XStack>
+                <h4
+                  className="title"
+                  style={{ float: "left", marginTop: "13px" }}
+                >
+                  Transfer To
+                </h4>
+                <img
+                  style={{
+                    float: "left",
+                    marginTop: "5px",
+                    marginLeft: "20%"
+                  }}
+                  alt=""
+                  src="https://uploads.codesandbox.io/uploads/user/b0e2d439-92ce-49c9-8acb-49d6d1c579a4/34ng-triangle.png"
+                />
+              </XStack>
               <div
                 style={{
+                  marginTop: "5px",
                   height: "calc(50% - 40px)"
                 }}
               >
@@ -101,7 +129,7 @@ class CollateralTransfer extends PureComponent {
                 height: "calc(100% - 20px)"
               }}
             >
-              <h4 className="title">Transfer From</h4>
+              <h4 className="title">Transfer From (Detail)</h4>
               <div
                 style={{
                   float: "left",

@@ -33,7 +33,11 @@ class MenuTab extends BaseTab {
             to: "/collateral_instruction_cash",
             text: "Collateral Instruction Cash"
           },
-          { to: "/collateral_transfer", text: "Collateral Transfer" }
+          { to: "/collateral_transfer", text: "Collateral Transfer" },
+          {
+            to: "/collateral_instruction_status",
+            text: "Collateral Instruction Status"
+          }
         ])
       },
       { name: "LSD", content: <div>LSD Content!</div> }

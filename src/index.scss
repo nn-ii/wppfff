@@ -334,3 +334,11 @@
   background-color: gray;
   opacity: 0.5;
 }
+
+.triangle {
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 40px 75px 0 75px;
+  border-color: #ff8400 transparent transparent transparent;
+}
