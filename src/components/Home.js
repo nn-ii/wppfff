@@ -2,6 +2,8 @@ import React, { PureComponent } from "react";
 import DataTable from "./Parts/DataTable";
 import FormSelect from "./Parts/FormSelect";
 import Modal from "./Parts/Modal";
+import XStack from "./Parts/XStack";
+
 import {
   getRandomInt,
   retryWithWait,

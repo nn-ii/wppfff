@@ -5,6 +5,7 @@ import Roster from "./Roster";
 import Schedule from "./Schedule";
 import Layout1x2 from "./Page/Layout1x2";
 import CollateralInstructionCash from "./Page/CollateralInstructionCash";
+import CollateralTransfer from "./Page/CollateralTransfer";
 
 const Main = props => (
   <Switch>
@@ -16,6 +17,7 @@ const Main = props => (
       path="/collateral_instruction_cash"
       component={CollateralInstructionCash}
     />
+    <Route path="/collateral_transfer" component={CollateralTransfer} />
   </Switch>
 );
 

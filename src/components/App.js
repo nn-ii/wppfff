@@ -213,7 +213,7 @@ class App extends PureComponent {
 
         {/* content */}
         <div
-          className="main-content y-stack"
+          className="main-content"
           onMouseEnter={
             this.state.showingMenu
               ? () => {
