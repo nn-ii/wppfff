@@ -213,7 +213,7 @@ class App extends PureComponent {
 
         {/* content */}
         <div
-          className="main-content"
+          className="main-content y-stack"
           onMouseEnter={
             this.state.showingMenu
               ? () => {
@@ -255,7 +255,7 @@ class App extends PureComponent {
               height: "100%",
               position: "absolute",
               left: "50px",
-              fontSize: "x-small"
+              fontSize: "6px"
             }}
           >
             <ToolTableCell

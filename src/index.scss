@@ -74,6 +74,16 @@
   position: absolute;
   font-size: small;
   /* overflow-y: scroll; */
+
+  &.y-stack > *,
+  y-stack > * {
+    position: relative;
+  }
+
+  .title {
+    margin-top: 8px;
+    margin-bottom: 5px;
+  }
 }
 .main-content::-webkit-scrollbar {
   width: 14px;

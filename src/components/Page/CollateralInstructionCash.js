@@ -50,15 +50,10 @@ class CollateralInstructionCash extends PureComponent {
   render() {
     return (
       <React.Fragment>
-        <h3 style={{ marginTop: "8px", marginBottom: "5px" }}>
-          Collateral Instruction - Cash
-        </h3>
-        <h4 style={{ marginTop: "8px", marginBottom: "5px" }}>
-          Instruction Part
-        </h4>
+        <h3 className="title">Collateral Instruction - Cash</h3>
+        <h4 className="title">Instruction Part</h4>
         <div
           style={{
-            position: "relative",
             marginTop: "8px",
             width: "100%",
             height: "58px",
@@ -76,8 +71,8 @@ class CollateralInstructionCash extends PureComponent {
             scrollable={false}
           />
         </div>
-        <div style={{ position: "relative" }}>
-          <h4 style={{ marginTop: "8px", marginBottom: "5px" }}>Detail Part</h4>
+        <div>
+          <h4 className="title">Detail Part</h4>
           <div
             style={{
               position: "absolute",
@@ -103,7 +98,6 @@ class CollateralInstructionCash extends PureComponent {
         </div>
         <div
           style={{
-            position: "relative",
             marginTop: "8px",
             width: "100%",
             height: "calc(100% - 180px)",
@@ -119,8 +113,9 @@ class CollateralInstructionCash extends PureComponent {
             toggleEnabled={false}
           />
         </div>
-        <div style={{ position: "relative", top: "5px", width: "100%" }}>
-          <div style={{ position: "absolute", right: "5px" }}>
+        <div style={{ top: "5px", width: "100%" }}>
+          {/*<div style={{ position: "absolute", right: "5px" }}>*/}
+          <div style={{ float: "right" }}>
             <div
               style={{
                 display: "inline-block",
@@ -147,6 +142,7 @@ class CollateralInstructionCash extends PureComponent {
             </div>
             <a className="btn green font-black wider1">Submit</a>
           </div>
+          <div style={{ clear: "both" }} />
         </div>
       </React.Fragment>
     );
