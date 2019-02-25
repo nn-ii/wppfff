@@ -7,17 +7,17 @@ const XStack = props => {
         <div style={{ float: "right" }}>
           <div className="x-stack">
             {props.children}
-            <div style={{ clear: "both" }} />
+            <div className="clear" />
           </div>
         </div>
-        <div style={{ clear: "both" }} />
+        <div className="clear" />
       </div>
     );
   } else {
     return (
       <div className="x-stack" style={props.style}>
         {props.children}
-        <div style={{ clear: "both" }} />
+        <div className="clear" />
       </div>
     );
   }

@@ -73,23 +73,28 @@
 .main-content {
   position: absolute;
   font-size: small;
-  /* overflow-y: scroll; */
+
+  .x-stack {
+    width: 100%;
+  }
 
   .y-stack {
     width: 100%;
     height: 100%;
   }
-  .x-stack {
-    width: 100%;
-  }
 
-  .y-stack > *,
   .x-stack > * {
     position: relative;
+    float: left;
+  }
+  .x-stack > .clear,
+  .x-stack-wrapper > .clear {
+    clear: both;
+    float: none;
   }
 
   .y-stack > * {
-    width: 100%;
+    position: relative;
   }
 
   .title {
