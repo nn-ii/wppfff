@@ -75,7 +75,7 @@ class AjaxDemo extends PureComponent {
           loading: false,
           tableRows: response.data.data.map(item => {
             return {
-              data: ["" + item.id, item.first_name, item.last_name, ""]
+              data: ["" + item.id, item.first_name, item.last_name]
             };
           })
         });
