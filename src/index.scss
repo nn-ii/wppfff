@@ -87,6 +87,9 @@
     position: relative;
     float: left;
   }
+  .x-stack-wrapper > .float-right {
+    float: right;
+  }
   .x-stack > .clear,
   .x-stack-wrapper > .clear {
     clear: both;
@@ -95,6 +98,33 @@
 
   .y-stack > * {
     position: relative;
+  }
+
+  .x-stack-lr {
+    width: 100%;
+
+    > .left-part {
+      float: left;
+
+      > * {
+        float: left;
+      }
+    }
+
+    > .right-part {
+      float: right;
+
+      > * {
+        float: left;
+      }
+    }
+
+    > .clear,
+    .left-part > .clear,
+    .right-part > clear {
+      clear: both;
+      float: none;
+    }
   }
 
   .title {

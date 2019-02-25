@@ -74,12 +74,9 @@ class CollateralInstructionCash extends PureComponent {
             />
           </div>
           <XStack>
-            <h4 style={{ float: "left" }} className="title">
-              Detail Part
-            </h4>
+            <h4 className="title">Detail Part</h4>
             <div
               style={{
-                float: "left",
                 marginTop: "2px",
                 marginLeft: "100px",
                 fontSize: "180%",
@@ -93,7 +90,6 @@ class CollateralInstructionCash extends PureComponent {
             </div>
             <div
               style={{
-                float: "left",
                 marginLeft: "10px",
                 fontSize: "180%",
                 fontWeight: "bold",
@@ -165,11 +161,9 @@ class CollateralInstructionCash extends PureComponent {
                 </table>
               </div>
               <XStack alignToRight={true} style={{ marginTop: "3px" }}>
-                <a style={{ float: "left" }} className="btn blue">
-                  AAAAA
-                </a>
+                <a className="btn blue">AAAAA</a>
                 <a
-                  style={{ float: "left", marginLeft: "5px" }}
+                  style={{ marginLeft: "5px" }}
                   className="btn blue"
                   onClick={() => this.setState({ showingChildScreen: false })}
                 >

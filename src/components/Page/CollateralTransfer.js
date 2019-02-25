@@ -3,6 +3,7 @@ import React, { PureComponent } from "react";
 import DataTable from "../Parts/DataTable";
 import Modal from "../Parts/Modal";
 import XStack from "../Parts/XStack";
+import XStackLeftRight from "../Parts/XStackLeftRight";
 
 import { getRandomInt } from "../Util";
 
@@ -54,19 +55,21 @@ class CollateralTransfer extends PureComponent {
     return (
       <React.Fragment>
         <div className="y-stack">
-          <XStack>
-            <h3 className="title" style={{ float: "left" }}>
-              Collateral Transfer Across Silo
-            </h3>
-            <img
-              style={{
-                float: "right",
-                marginTop: "8px"
-              }}
-              alt=""
-              src="https://uploads.codesandbox.io/uploads/user/b0e2d439-92ce-49c9-8acb-49d6d1c579a4/Yk09-reload.png"
-            />
-          </XStack>
+          <XStackLeftRight
+            leftChildren={
+              <h3 className="title">Collateral Transfer Across Silo</h3>
+            }
+            rightChildren={
+              <img
+                style={{
+                  marginTop: "8px"
+                }}
+                alt=""
+                src="https://uploads.codesandbox.io/uploads/user/b0e2d439-92ce-49c9-8acb-49d6d1c579a4/Yk09-reload.png"
+              />
+            }
+          />
+
           <XStack style={{ height: "calc(100% - 60px)" }}>
             <div
               className="y-stack"

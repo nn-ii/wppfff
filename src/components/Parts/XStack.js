@@ -4,7 +4,7 @@ const XStack = props => {
   if (props.alignToRight) {
     return (
       <div className="x-stack-wrapper" style={props.style}>
-        <div style={{ float: "right" }}>
+        <div className="float-right">
           <div className="x-stack">
             {props.children}
             <div className="clear" />
