@@ -71,10 +71,7 @@ class CollateralTransfer extends PureComponent {
           />
 
           <XStack style={{ height: "calc(100% - 60px)" }}>
-            <div
-              className="y-stack"
-              style={{ float: "left", width: "calc(50% - 20px)" }}
-            >
+            <div className="y-stack" style={{ width: "calc(50% - 20px)" }}>
               <h4 className="title">Transfer From</h4>
               <div
                 style={{
@@ -91,15 +88,11 @@ class CollateralTransfer extends PureComponent {
                 />
               </div>
               <XStack>
-                <h4
-                  className="title"
-                  style={{ float: "left", marginTop: "13px" }}
-                >
+                <h4 className="title" style={{ marginTop: "13px" }}>
                   Transfer To
                 </h4>
                 <img
                   style={{
-                    float: "left",
                     marginTop: "5px",
                     marginLeft: "20%"
                   }}
@@ -126,7 +119,6 @@ class CollateralTransfer extends PureComponent {
             <div
               className="y-stack"
               style={{
-                float: "left",
                 marginLeft: "10px",
                 width: "calc(50% - 20px)",
                 height: "calc(100% - 20px)"
@@ -135,7 +127,6 @@ class CollateralTransfer extends PureComponent {
               <h4 className="title">Transfer From (Detail)</h4>
               <div
                 style={{
-                  float: "left",
                   height: "calc(100% - 35px)"
                 }}
               >
@@ -155,38 +146,7 @@ class CollateralTransfer extends PureComponent {
           </XStack>
         </div>
 
-        {this.state.showingChildScreen && (
-          <Modal title="Instruction Part">
-            <div className="y-stack">
-              <div>
-                <table>
-                  <tbody>
-                    <tr>
-                      <td style={{ textAlign: "right" }}>XXXX</td>
-                      <td>XXXXX</td>
-                    </tr>
-                    <tr>
-                      <td style={{ textAlign: "right" }}>1111111XXXX</td>
-                      <td>XXXXX123</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <XStack alignToRight={true} style={{ marginTop: "3px" }}>
-                <a style={{ float: "left" }} className="btn blue">
-                  AAAAA
-                </a>
-                <a
-                  style={{ float: "left", marginLeft: "5px" }}
-                  className="btn blue"
-                  onClick={() => this.setState({ showingChildScreen: false })}
-                >
-                  Cancel
-                </a>
-              </XStack>
-            </div>
-          </Modal>
-        )}
+        {this.state.showingChildScreen && <Modal title="AAAA" />}
       </React.Fragment>
     );
   }

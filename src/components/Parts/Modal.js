@@ -1,12 +1,6 @@
-import React, { Component } from "react";
-import ToolTableCell from "./ToolTableCell";
+import React, { PureComponent } from "react";
 
-class Modal extends Component {
-  constructor() {
-    super();
-    this.state = {};
-    this.tabs = [];
-  }
+class Modal extends PureComponent {
   render() {
     return (
       <div className="modal-root">

@@ -1,11 +1,12 @@
 import React, { PureComponent } from "react";
 
 import DataTable from "../Parts/DataTable";
-import Modal from "../Parts/Modal";
 import XStack from "../Parts/XStack";
+import ClosableArea from "../Parts/ClosableArea";
 import FormInput from "../Parts/Form/FormInput";
+import FormSelect from "../Parts/Form/FormSelect";
 
-import { getRandomInt } from "../Util";
+import { getRandomInt, toggleState } from "../Util";
 
 class CollateralInstructionStatus extends PureComponent {
   constructor() {
@@ -48,148 +49,121 @@ class CollateralInstructionStatus extends PureComponent {
       ],
       tmpArray: [],
 
-      showingSearchCondition: true,
-      showingChildScreen: false
+      showingClosableArea: true
     };
 
     this.setStateFunc = toSet => {
       this.setState(toSet);
     };
+
+    this.toggleShowingClosableAreaFunc = () =>
+      toggleState(this, "showingClosableArea");
   }
   render() {
     return (
       <React.Fragment>
-        <div className="y-stack">
-          <h3 className="title">Collateral Instruction Status</h3>
-          <div style={{ border: "solid 1px gray" }}>
-            <XStack style={{ backgroundColor: "lightgray" }}>
-              <div style={{ float: "left" }}>Search Condition</div>
-              <div
-                style={{ float: "left", marginLeft: "15px" }}
+        <h3 className="title">Collateral Instruction Status</h3>
+        <ClosableArea
+          title="Search Condition"
+          closed={!this.state.showingClosableArea}
+          whenToggleButtonClick={this.toggleShowingClosableAreaFunc}
+        >
+          <div id="searchForm">
+            <div style={{ marginTop: "5px" }}>
+              Request Date
+              <FormInput
+                name="requestDateStart"
+                value={this.state.searchFormRequestDateStartValue}
+                setParentStateFunc={this.setStateFunc}
+                parentStateKey="searchFormRequestDateStart"
+                validationFunc={v => v === "A"}
+                isValid={this.state.searchFormRequestDateStartValid}
+              />
+              <span style={{ marginRight: "5px" }}>-</span>
+              <FormInput
+                name="requestDateEnd"
+                value={this.state.searchFormRequestDateEndValue}
+                setParentStateFunc={this.setStateFunc}
+                parentStateKey="searchFormRequestDateEnd"
+                validationFunc={v => v === "A"}
+                isValid={this.state.searchFormRequestDateEndValid}
+              />
+            </div>
+            <div style={{ marginTop: "5px" }}>
+              Status
+              <FormSelect
+                name="requestDateStart"
+                options={["A", "B"]}
+                selected={this.state.searchFormStatusValue}
+                setParentStateFunc={this.setStateFunc}
+                parentStateKey="searchFormStatus"
+              />
+            </div>
+
+            <XStack alignToRight={true} style={{ marginTop: "5px" }}>
+              <a
+                className="btn blue"
+                name="search"
                 onClick={() => {
-                  this.setState({
-                    showingSearchCondition: !this.state.showingSearchCondition
-                  });
+                  console.log(
+                    "searchFormCategory val/valid",
+                    this.state.searchFormCategoryValue,
+                    this.state.searchFormCategoryValid
+                  );
+                  this.setState({ searchFormCategory: "" });
                 }}
               >
-                ↓
-              </div>
+                Search
+              </a>
             </XStack>
-            <div
-              style={{
-                display: this.state.showingSearchCondition ? undefined : "none"
-              }}
-            >
-              <div id="seachForm">
-                <div style={{ marginTop: "5px" }}>
-                  Category
-                  <FormInput
-                    name="category"
-                    value={this.state.seachFormCategoryValue}
-                    setParentStateFunc={this.setStateFunc}
-                    parentStateKey="seachFormCategory"
-                    validationFunc={v => v === "A"}
-                    isValid={this.state.seachFormCategoryValid}
-                  />
-                </div>
-                <div style={{ marginTop: "5px" }}>
-                  <button
-                    name="submit"
-                    onClick={() => {
-                      console.log(
-                        "seachFormCategory val/valid",
-                        this.state.seachFormCategoryValue,
-                        this.state.seachFormCategoryValid
-                      );
-                      this.setState({ seachFormCategory: "" });
-                    }}
-                  >
-                    Submit
-                  </button>
-                </div>
-              </div>
-            </div>
           </div>
+        </ClosableArea>
 
-          <h4 className="title">Detail Part</h4>
+        <h4 className="title">Detail Part</h4>
+        <div
+          style={{
+            marginTop: "5px",
+            height: `calc(100% - ${
+              this.state.showingClosableArea ? 203 : 124
+            }px)`
+          }}
+        >
+          <DataTable
+            rows={this.state.rows}
+            columns={this.state.columns}
+            editableIndices={this.state.tmpArray}
+            inputSpaceIndices={this.state.tmpArray}
+            sortableIndices={this.state.tmpArray}
+            toggleEnabled={false}
+          />
+        </div>
+        <XStack alignToRight={true}>
           <div
             style={{
-              marginTop: "5px",
-              height: `calc(100% - ${
-                this.state.showingSearchCondition ? 185 : 138
-              }px)`
+              display: "inline-block",
+              width: "15px",
+              borderBottom: "1px solid",
+              textAlign: "center",
+              paddingBottom: "1px",
+              marginRight: "7px"
             }}
           >
-            <DataTable
-              rows={this.state.rows}
-              columns={this.state.columns}
-              editableIndices={this.state.tmpArray}
-              inputSpaceIndices={this.state.tmpArray}
-              sortableIndices={this.state.tmpArray}
-              toggleEnabled={false}
-            />
+            ↑
           </div>
-          <XStack alignToRight={true} style={{ marginTop: "7px" }}>
-            <div
-              style={{
-                display: "inline-block",
-                width: "15px",
-                borderBottom: "1px solid",
-                textAlign: "center",
-                paddingBottom: "1px",
-                marginRight: "7px"
-              }}
-            >
-              ↑
-            </div>
-            <div
-              style={{
-                display: "inline-block",
-                width: "15px",
-                borderBottom: "1px solid",
-                textAlign: "center",
-                paddingBottom: "1px",
-                marginRight: "7px"
-              }}
-            >
-              ↓
-            </div>
-            <a className="btn green font-black wider1">Submit</a>
-          </XStack>
-        </div>
-
-        {this.state.showingChildScreen && (
-          <Modal title="Instruction Part">
-            <div className="y-stack">
-              <div>
-                <table>
-                  <tbody>
-                    <tr>
-                      <td style={{ textAlign: "right" }}>XXXX</td>
-                      <td>XXXXX</td>
-                    </tr>
-                    <tr>
-                      <td style={{ textAlign: "right" }}>1111111XXXX</td>
-                      <td>XXXXX123</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <XStack alignToRight={true} style={{ marginTop: "3px" }}>
-                <a style={{ float: "left" }} className="btn blue">
-                  AAAAA
-                </a>
-                <a
-                  style={{ float: "left", marginLeft: "5px" }}
-                  className="btn blue"
-                  onClick={() => this.setState({ showingChildScreen: false })}
-                >
-                  Cancel
-                </a>
-              </XStack>
-            </div>
-          </Modal>
-        )}
+          <div
+            style={{
+              display: "inline-block",
+              width: "15px",
+              borderBottom: "1px solid",
+              textAlign: "center",
+              paddingBottom: "1px",
+              marginRight: "7px"
+            }}
+          >
+            ↓
+          </div>
+          <a className="btn green font-black wider1">Submit</a>
+        </XStack>
       </React.Fragment>
     );
   }

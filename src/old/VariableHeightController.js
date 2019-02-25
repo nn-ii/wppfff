@@ -1,7 +1,9 @@
 import React, { PureComponent } from "react";
 import DataTable from "../Parts/DataTable";
-import FormSelect from "../Parts/FormSelect";
+import FormSelect from "../Parts/Form/FormSelect";
 import Modal from "../Parts/Modal";
+import ClosableArea from "../Parts/ClosableArea";
+import { toggleState } from "../Util";
 
 import {
   getRandomInt,
@@ -38,15 +40,20 @@ class DataTableDemo extends PureComponent {
       tableRows: [],
       variableHeight: 0,
       loading: false,
-      errorMessage: null
+      errorMessage: null,
+      showingClosableArea: true
     };
     this.variableHeightNode = React.createRef();
 
-    //this.setVariableHeightStart();
+    this.setStateFunc = toSet => {
+      this.setState(toSet);
+    };
+    this.toggleShowingClosableAreaFunc = () =>
+      toggleState(this, "showingClosableArea");
 
     [
       "onSearch",
-      "formSelectAAAAOnChange",
+      "searchFormSecondLayerTypeOnChange",
       "whenEditableAction",
       "whenInputSpaceAction"
     ].forEach(methodName => {
@@ -54,7 +61,7 @@ class DataTableDemo extends PureComponent {
     });
 
     /* for testing */
-    setTimeout(() => this.debugInsertDataToTable(10), 0);
+    setTimeout(() => this.debugInsertDataToTable(10), 1);
   }
   static getDerivedStateFromProps(nextProps, prevState) {
     return null;
@@ -93,27 +100,35 @@ class DataTableDemo extends PureComponent {
         });
       });
   }
-  formSelectAAAAOnChange(e) {
-    if (e.target.value === this.state.formSelectAAAAValue) {
+  searchFormSecondLayerTypeOnChange(toSet) {
+    if (
+      toSet.searchFormSecondLayerTypeValue ===
+      this.state.searchFormSecondLayerTypeValue
+    ) {
       return;
     }
 
-    let stateToSet = { formSelectAAAAValue: e.target.value };
-    if (e.target.value === "All") {
-      stateToSet.formSelectBBBBOptions = ["All"];
-      stateToSet.formSelectBBBBValue = "All";
-    } else if (e.target.value === "House") {
-      stateToSet.formSelectBBBBOptions = [{ value: "nothing", text: "-" }];
-      stateToSet.formSelectBBBBValue = "nothing";
-    } else if (e.target.value === "Affiliate") {
-      stateToSet.formSelectBBBBOptions = ["All", "Affiliate X", "Affiliate Y"];
-      stateToSet.formSelectBBBBValue = "All";
-    } else if (e.target.value === "Client") {
-      stateToSet.formSelectBBBBOptions = ["All", "Client X", "Client Y"];
-      stateToSet.formSelectBBBBValue = "All";
+    if (toSet.searchFormSecondLayerTypeValue === "All") {
+      toSet.searchFormSecondLayerNameOptions = undefined;
+      toSet.searchFormSecondLayerNameValue = undefined;
+    } else if (toSet.searchFormSecondLayerTypeValue === "House") {
+      toSet.searchFormSecondLayerNameOptions = [
+        { value: "nothing", text: "(House)" }
+      ];
+      toSet.searchFormSecondLayerNameValue = "nothing";
+    } else if (toSet.searchFormSecondLayerTypeValue === "Affiliate") {
+      toSet.searchFormSecondLayerNameOptions = [
+        "All",
+        "Affiliate X",
+        "Affiliate Y"
+      ];
+      toSet.searchFormSecondLayerNameValue = "All";
+    } else if (toSet.searchFormSecondLayerTypeValue === "Client") {
+      toSet.searchFormSecondLayerNameOptions = ["All", "Client X", "Client Y"];
+      toSet.searchFormSecondLayerNameValue = "All";
     }
 
-    this.setState(stateToSet);
+    this.setState(toSet);
   }
   setVariableHeightStart() {
     this.setVariableHeightController = runWithInterval(500, resolve => {
@@ -150,78 +165,67 @@ class DataTableDemo extends PureComponent {
         />
         <h4 style={{ marginTop: "5px", marginBottom: "5px" }}>Hello Browser</h4>
 
-        <div
-          style={{
-            height: "70px",
-            width: "100%",
-            border: "1px solid black",
-            overflowWrap: "break-word",
-            paddingTop: "5px",
-            paddingLeft: "5px"
-          }}
+        <ClosableArea
+          title="Search Condition"
+          closed={!this.state.showingClosableArea}
+          whenToggleButtonClick={this.toggleShowingClosableAreaFunc}
         >
-          <label style={{ marginRight: "10px" }}>
-            AAAA:
-            <FormSelect
-              options={[
-                { value: "All", text: "All " },
-                "House",
-                "Affiliate",
-                "Client"
-              ]}
-              callbackOnChange={this.formSelectAAAAOnChange}
-              selectedItem={
-                typeof this.state.formSelectAAAAValue === "string"
-                  ? this.state.formSelectAAAAValue
-                  : "All"
-              }
-            />
-          </label>
-          <label>
-            BBBB:
-            <FormSelect
-              options={this.state.formSelectBBBBOptions || ["All"]}
-              callbackOnChange={e =>
-                this.setState({ formSelectBBBBValue: e.target.value })
-              }
-              selectedItem={this.state.formSelectBBBBValue || "All"}
-            />
-          </label>
-          <a
-            className="btn blue for-operation"
-            style={{ marginLeft: "10px" }}
-            onClick={this.onSearch}
-          >
-            Search
-          </a>
+          <div id="searchForm">
+            <label style={{ marginRight: "10px" }}>
+              2nd Layer Type:
+              <FormSelect
+                name="secondLayerType"
+                options={["All", "House", "Affiliate", "Client"]}
+                setParentStateFunc={this.searchFormSecondLayerTypeOnChange}
+                selected={this.state.searchFormSecondLayerTypeValue}
+                parentStateKey="searchFormSecondLayerType"
+              />
+            </label>
+            <label>
+              2nd Layer:
+              <FormSelect
+                name="secondLayerName"
+                options={this.state.searchFormSecondLayerNameOptions || ["All"]}
+                selected={this.state.searchFormSecondLayerNameValue || "All"}
+                setParentStateFunc={this.setStateFunc}
+                parentStateKey="searchFormSecondLayerName"
+              />
+            </label>
+            <a
+              className="btn blue"
+              style={{ marginLeft: "10px" }}
+              onClick={this.onSearch}
+            >
+              Search
+            </a>
 
-          <label style={{ marginLeft: "20px" }}>
-            Count:
-            <input
-              value={this.state.formCountValue || ""}
-              onChange={e => {
-                this.setState({
-                  formCountValue: e.target.value,
-                  formCountValidity:
-                    e.target.value.match(/^\d+$/) && e.target.value <= 3000
-                });
+            <label style={{ marginLeft: "20px" }}>
+              Count:
+              <input
+                value={this.state.formCountValue || ""}
+                onChange={e => {
+                  this.setState({
+                    formCountValue: e.target.value,
+                    formCountValidity:
+                      e.target.value.match(/^\d+$/) && e.target.value <= 3000
+                  });
+                }}
+              />
+            </label>
+
+            <a
+              className={
+                "btn blue" + (this.state.formCountValidity ? "" : " disabled")
+              }
+              style={{ marginLeft: "10px" }}
+              onClick={() => {
+                this.debugInsertDataToTable(this.state.formCountValue);
               }}
-            />
-          </label>
-
-          <a
-            className={
-              "btn blue for-operation" +
-              (this.state.formCountValidity ? "" : " disabled")
-            }
-            style={{ marginLeft: "10px" }}
-            onClick={() => {
-              this.debugInsertDataToTable(this.state.formCountValue);
-            }}
-          >
-            Test Load
-          </a>
-        </div>
+            >
+              Test Load
+            </a>
+          </div>
+        </ClosableArea>
         <div
           style={{
             position: "relative",

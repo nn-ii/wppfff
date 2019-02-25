@@ -1,16 +1,14 @@
 import React from "react";
 import { Switch, Route } from "react-router-dom";
-import DataTableDemo from "../Page/DataTableDemo";
-import Layout1x2 from "../Page/Layout1x2";
+import AjaxDemo from "../Page/AjaxDemo";
 import CollateralInstructionCash from "../Page/CollateralInstructionCash";
 import CollateralTransfer from "../Page/CollateralTransfer";
 import CollateralInstructionStatus from "../Page/CollateralInstructionStatus";
 
 const Main = props => (
   <Switch>
-    <Route exact path="/" component={Layout1x2} />
-    <Route path="/data_table_demo" component={DataTableDemo} />
-    <Route path="/layout1x2" component={Layout1x2} />
+    <Route exact path="/" component={CollateralInstructionCash} />
+    <Route path="/ajax_demo" component={AjaxDemo} />
     <Route
       path="/collateral_instruction_cash"
       component={CollateralInstructionCash}

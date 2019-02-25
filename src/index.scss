@@ -74,17 +74,7 @@
   position: absolute;
   font-size: small;
 
-  .x-stack {
-    width: 100%;
-  }
-
-  .y-stack {
-    width: 100%;
-    height: 100%;
-  }
-
   .x-stack > * {
-    position: relative;
     float: left;
   }
   .x-stack-wrapper > .float-right {
@@ -96,13 +86,7 @@
     float: none;
   }
 
-  .y-stack > * {
-    position: relative;
-  }
-
   .x-stack-lr {
-    width: 100%;
-
     > .left-part {
       float: left;
 
@@ -376,4 +360,11 @@
   border-style: solid;
   border-width: 40px 75px 0 75px;
   border-color: #ff8400 transparent transparent transparent;
+}
+
+table.in-modal-type-a > tbody > tr > td:first-child {
+  text-align: right;
+  color: darkblue;
+  font-weight: bold;
+  padding-right: 15px;
 }

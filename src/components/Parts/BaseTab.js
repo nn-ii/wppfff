@@ -1,6 +1,6 @@
-import React, { Component } from "react";
+import React, { PureComponent } from "react";
 
-class BaseTab extends Component {
+class BaseTab extends PureComponent {
   constructor() {
     super();
     this.state = { openIndex: 0 };

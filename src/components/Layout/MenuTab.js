@@ -25,8 +25,7 @@ class MenuTab extends BaseTab {
       {
         name: "IRS",
         content: this.createMenusTab([
-          { to: "/layout1x2", text: "Layout1x2" },
-          { to: "/data_table_demo", text: "DataTableDemo" },
+          { to: "/ajax_demo", text: "Ajax Demo" },
           {
             to: "/collateral_instruction_cash",
             text: "Collateral Instruction Cash"

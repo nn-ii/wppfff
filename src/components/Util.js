@@ -165,3 +165,9 @@ export const nTimes = (n, func) => {
     func(i);
   }
 };
+
+export const toggleState = (object, key) => {
+  let toSet = {};
+  toSet[key] = !object.state[key];
+  object.setState(toSet);
+};

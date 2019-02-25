@@ -31,7 +31,7 @@ class FormInput extends PureComponent {
           name={this.props.name}
           style={this.props.style}
           value={this.props.value || ""}
-          onChange={this.onChange}
+          onChange={this.props.onChange || this.onChange}
         />
         <div
           style={{

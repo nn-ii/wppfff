@@ -1,7 +1,7 @@
 import React from "react";
 import ToggleButton from "./ToggleButton";
-import Editable from "../Editable";
-import InputSpace from "../InputSpace";
+import Editable from "./Editable";
+import InputSpace from "./InputSpace";
 
 const Cell = React.memo(props => {
   let toggleButton, paddingLeft;
