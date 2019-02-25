@@ -1,7 +1,7 @@
 import React from "react"; /* needed even when extends some coponent */
-import BaseTab from "./BaseTab";
+import BaseTab from "../Parts/BaseTab";
 import { Link } from "react-router-dom";
-import { eachWithIndex } from "./Util";
+import { eachWithIndex } from "../Util";
 
 class MenuTab extends BaseTab {
   createMenusTab(linkSettings) {
@@ -25,10 +25,8 @@ class MenuTab extends BaseTab {
       {
         name: "IRS",
         content: this.createMenusTab([
-          { to: "/", text: "Home" },
-          { to: "/roster", text: "Roster" },
-          { to: "/schedule", text: "Schedule" },
           { to: "/layout1x2", text: "Layout1x2" },
+          { to: "/data_table_demo", text: "DataTableDemo" },
           {
             to: "/collateral_instruction_cash",
             text: "Collateral Instruction Cash"

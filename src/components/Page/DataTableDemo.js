@@ -1,18 +1,17 @@
 import React, { PureComponent } from "react";
-import DataTable from "./Parts/DataTable";
-import FormSelect from "./Parts/FormSelect";
-import Modal from "./Parts/Modal";
-import XStack from "./Parts/XStack";
+import DataTable from "../Parts/DataTable";
+import FormSelect from "../Parts/FormSelect";
+import Modal from "../Parts/Modal";
 
 import {
   getRandomInt,
   retryWithWait,
   withoutPx,
   runWithInterval
-} from "./Util";
+} from "../Util";
 import axios from "axios";
 
-class Home extends PureComponent {
+class DataTableDemo extends PureComponent {
   constructor() {
     super();
 
@@ -315,4 +314,4 @@ class Home extends PureComponent {
   }
 }
 
-export default Home;
+export default DataTableDemo;

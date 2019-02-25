@@ -1,10 +1,9 @@
 import React, { PureComponent } from "react";
-import Main from "./Main";
-import MenuTab from "./MenuTab";
+import Main from "./Layout/Main";
+import MenuTab from "./Layout/MenuTab";
 import ToolTableCell from "./Parts/ToolTableCell";
-import "../index.scss";
 import { retryWithWait, zeroPadding, withoutPx, runWithInterval } from "./Util";
-import { throttle } from "throttle-debounce";
+import "../index.scss";
 
 class App extends PureComponent {
   constructor() {
