@@ -3,6 +3,7 @@ import React, { PureComponent } from "react";
 import DataTable from "../Parts/DataTable";
 import Modal from "../Parts/Modal";
 import XStack from "../Parts/XStack";
+import FormInput from "../Parts/Form/FormInput";
 
 import { getRandomInt } from "../Util";
 
@@ -50,6 +51,10 @@ class CollateralInstructionStatus extends PureComponent {
       showingSearchCondition: true,
       showingChildScreen: false
     };
+
+    this.setStateFunc = toSet => {
+      this.setState(toSet);
+    };
   }
   render() {
     return (
@@ -72,12 +77,37 @@ class CollateralInstructionStatus extends PureComponent {
             </XStack>
             <div
               style={{
-                display: this.state.showingSearchCondition ? undefined : "none",
-                height: "50px"
+                display: this.state.showingSearchCondition ? undefined : "none"
               }}
             >
-              <div>AAA BBB</div>
-              <div>CCC DDD</div>
+              <div id="seachForm">
+                <div style={{ marginTop: "5px" }}>
+                  Category
+                  <FormInput
+                    name="category"
+                    value={this.state.seachFormCategoryValue}
+                    setParentStateFunc={this.setStateFunc}
+                    parentStateKey="seachFormCategory"
+                    validationFunc={v => v === "A"}
+                    isValid={this.state.seachFormCategoryValid}
+                  />
+                </div>
+                <div style={{ marginTop: "5px" }}>
+                  <button
+                    name="submit"
+                    onClick={() => {
+                      console.log(
+                        "seachFormCategory val/valid",
+                        this.state.seachFormCategoryValue,
+                        this.state.seachFormCategoryValid
+                      );
+                      this.setState({ seachFormCategory: "" });
+                    }}
+                  >
+                    Submit
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -86,7 +116,7 @@ class CollateralInstructionStatus extends PureComponent {
             style={{
               marginTop: "5px",
               height: `calc(100% - ${
-                this.state.showingSearchCondition ? 185 : 135
+                this.state.showingSearchCondition ? 185 : 138
               }px)`
             }}
           >
