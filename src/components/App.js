@@ -1,8 +1,14 @@
 import React, { PureComponent } from "react";
 import Main from "./Layout/Main";
 import MenuTab from "./Layout/MenuTab";
-import ToolTableCell from "./Parts/ToolTableCell";
-import { retryWithWait, zeroPadding, withoutPx, runWithInterval } from "./Util";
+import ToolCentering from "./Parts/ToolCentering";
+import {
+  retryWithWait,
+  zeroPadding,
+  withoutPx,
+  runWithInterval,
+  toggleState
+} from "./Util";
 import "../index.scss";
 
 class App extends PureComponent {
@@ -26,6 +32,9 @@ class App extends PureComponent {
     this.rootNode = React.createRef();
 
     this.setMainVisibleSizeStart();
+
+    this.toggleShowingMenuFunc = () => toggleState(this, "showingMenu");
+    this.closeMenuFunc = () => this.setState({ showingMenu: false });
 
     this.setDateTimeId = setInterval(() => {
       this.setDateTime();
@@ -99,11 +108,6 @@ class App extends PureComponent {
   render() {
     let menuWidth = "40px";
     let headerHeight = "50px";
-    let messageAreaNormalHeight = "30px";
-    let messageAreaExpandedHeight = "100px";
-    let messageAreaHeight = this.state.messageAreaExpanded
-      ? messageAreaExpandedHeight
-      : messageAreaNormalHeight;
 
     return (
       <div ref={this.rootNode} className="root">
@@ -116,8 +120,8 @@ class App extends PureComponent {
             backgroundColor: "#87cefa",
             position: "fixed",
             zIndex: "100",
-            top: "0px",
-            left: "0px"
+            top: "0",
+            left: "0"
           }}
         >
           {/* left company name */}
@@ -129,11 +133,9 @@ class App extends PureComponent {
               height: "100%"
             }}
           >
-            <ToolTableCell
-              content={
-                <div style={{ fontSize: "120%", color: "darkblue" }}>JSCC</div>
-              }
-            />
+            <ToolCentering neverChange={true}>
+              <span style={{ fontSize: "120%", color: "darkblue" }}>JSCC</span>
+            </ToolCentering>
           </div>
 
           {/* center service name */}
@@ -146,28 +148,24 @@ class App extends PureComponent {
               height: "100%"
             }}
           >
-            <ToolTableCell
-              content={
-                <div style={{ fontSize: "120%", color: "darkblue" }}>
-                  Web Portal +
-                </div>
-              }
-            />
+            <ToolCentering neverChange={true}>
+              <div style={{ fontSize: "120%", color: "darkblue" }}>
+                Web Portal +
+              </div>
+            </ToolCentering>
           </div>
 
           {/* right service name */}
-          <div style={{ float: "right", height: "100%", marginRight: "8px" }}>
-            <ToolTableCell
-              content={
-                <div style={{ fontSize: "60%", textAlign: "right" }}>
-                  Last Update: {this.state.lastUpdate}
-                  <br />
-                  BBBBBBBBBBBB
-                  <br />
-                  <br />
-                </div>
-              }
-            />
+          <div style={{ position: "absolute", right: "8px", height: "100%" }}>
+            <ToolCentering>
+              <div style={{ fontSize: "60%", textAlign: "right" }}>
+                Last Update: {this.state.lastUpdate}
+                <br />
+                BBBBBBBBBBBB
+                <br />
+                <br />
+              </div>
+            </ToolCentering>
           </div>
         </div>
 
@@ -185,17 +183,11 @@ class App extends PureComponent {
           }}
         >
           <div style={{ float: "left", width: menuWidth, height: "100%" }}>
-            <ToolTableCell
-              content={
-                <button
-                  onClick={() =>
-                    this.setState({ showingMenu: !this.state.showingMenu })
-                  }
-                >
-                  {this.state.showingMenu ? "←" : "→"}
-                </button>
-              }
-            />
+            <ToolCentering>
+              <button onClick={this.toggleShowingMenuFunc}>
+                {this.state.showingMenu ? "←" : "→"}
+              </button>
+            </ToolCentering>
           </div>
           <div
             style={{
@@ -213,20 +205,8 @@ class App extends PureComponent {
         {/* content */}
         <div
           className="main-content"
-          onMouseEnter={
-            this.state.showingMenu
-              ? () => {
-                  this.setState({ showingMenu: false });
-                }
-              : undefined
-          }
-          onMouseMove={
-            this.state.showingMenu
-              ? () => {
-                  this.setState({ showingMenu: false });
-                }
-              : undefined
-          }
+          onMouseEnter={this.state.showingMenu ? this.closeMenuFunc : undefined}
+          onMouseMove={this.state.showingMenu ? this.closeMenuFunc : undefined}
           style={{
             top: headerHeight,
             left: `calc(${menuWidth} + 10px)`,
@@ -257,7 +237,8 @@ class App extends PureComponent {
               fontSize: "6px"
             }}
           >
-            <ToolTableCell
+            <ToolCentering
+              neverChange={true}
               content={`Copyright (C) Japan Securities Clearing Corporation. ALL RIGTHS
             RESERVED`}
             />
