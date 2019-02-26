@@ -181,7 +181,7 @@ export const createCsvBlob = rowsArray => {
 
   return new Blob([data], {
     type: window.navigator.msSaveOrOpenBlob
-      ? this.getMimeType()
+      ? "text/csv;charset=utf-8;"
       : "octet/stream"
   });
 };
