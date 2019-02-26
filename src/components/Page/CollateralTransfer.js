@@ -54,97 +54,95 @@ class CollateralTransfer extends PureComponent {
   render() {
     return (
       <React.Fragment>
-        <div className="y-stack">
-          <XStackLeftRight
-            leftChildren={
-              <h3 className="title">Collateral Transfer Across Silo</h3>
-            }
-            rightChildren={
-              <img
-                style={{
-                  marginTop: "8px"
-                }}
-                alt=""
-                src="https://uploads.codesandbox.io/uploads/user/b0e2d439-92ce-49c9-8acb-49d6d1c579a4/Yk09-reload.png"
-              />
-            }
-          />
-
-          <XStack style={{ height: "calc(100% - 60px)" }}>
-            <div className="y-stack" style={{ width: "calc(50% - 20px)" }}>
-              <h4 className="title">Transfer From</h4>
-              <div
-                style={{
-                  height: "calc(50% - 40px)"
-                }}
-              >
-                <DataTable
-                  rows={this.state.rows}
-                  columns={this.state.columns}
-                  editableIndices={this.state.tmpArray}
-                  inputSpaceIndices={this.state.tmpArray}
-                  sortableIndices={this.state.tmpArray}
-                  toggleEnabled={false}
-                />
-              </div>
-              <XStack>
-                <h4 className="title" style={{ marginTop: "13px" }}>
-                  Transfer To
-                </h4>
-                <img
-                  style={{
-                    marginTop: "5px",
-                    marginLeft: "20%"
-                  }}
-                  alt=""
-                  src="https://uploads.codesandbox.io/uploads/user/b0e2d439-92ce-49c9-8acb-49d6d1c579a4/34ng-triangle.png"
-                />
-              </XStack>
-              <div
-                style={{
-                  marginTop: "5px",
-                  height: "calc(50% - 40px)"
-                }}
-              >
-                <DataTable
-                  rows={this.state.rows}
-                  columns={this.state.columns}
-                  editableIndices={this.state.tmpArray}
-                  inputSpaceIndices={this.state.tmpArray}
-                  sortableIndices={this.state.tmpArray}
-                  toggleEnabled={false}
-                />
-              </div>
-            </div>
-            <div
-              className="y-stack"
+        <XStackLeftRight
+          leftChildren={
+            <h3 className="title">Collateral Transfer Across Silo</h3>
+          }
+          rightChildren={
+            <img
               style={{
-                marginLeft: "10px",
-                width: "calc(50% - 20px)",
-                height: "calc(100% - 20px)"
+                marginTop: "8px"
+              }}
+              alt=""
+              src="https://uploads.codesandbox.io/uploads/user/b0e2d439-92ce-49c9-8acb-49d6d1c579a4/Yk09-reload.png"
+            />
+          }
+        />
+
+        <XStack style={{ height: "calc(100% - 60px)" }}>
+          <div style={{ height: "100%", width: "calc(50% - 20px)" }}>
+            <h4 className="title">Transfer From</h4>
+            <div
+              style={{
+                height: "calc(50% - 40px)"
               }}
             >
-              <h4 className="title">Transfer From (Detail)</h4>
-              <div
-                style={{
-                  height: "calc(100% - 35px)"
-                }}
-              >
-                <DataTable
-                  rows={this.state.rows}
-                  columns={this.state.columns}
-                  editableIndices={this.state.tmpArray}
-                  inputSpaceIndices={this.state.tmpArray}
-                  sortableIndices={this.state.tmpArray}
-                  toggleEnabled={false}
-                />
-              </div>
+              <DataTable
+                rows={this.state.rows}
+                columns={this.state.columns}
+                editableIndices={this.state.tmpArray}
+                inputSpaceIndices={this.state.tmpArray}
+                sortableIndices={this.state.tmpArray}
+                toggleEnabled={false}
+              />
             </div>
-          </XStack>
-          <XStack alignToRight={true} style={{ marginTop: "2px" }}>
-            <a className="btn blue wider1">Input Amount</a>
-          </XStack>
-        </div>
+            <XStack>
+              <h4 className="title" style={{ marginTop: "13px" }}>
+                Transfer To
+              </h4>
+              <img
+                style={{
+                  marginTop: "5px",
+                  marginLeft: "20%"
+                }}
+                alt=""
+                src="https://uploads.codesandbox.io/uploads/user/b0e2d439-92ce-49c9-8acb-49d6d1c579a4/34ng-triangle.png"
+              />
+            </XStack>
+            <div
+              style={{
+                marginTop: "5px",
+                height: "calc(50% - 40px)"
+              }}
+            >
+              <DataTable
+                rows={this.state.rows}
+                columns={this.state.columns}
+                editableIndices={this.state.tmpArray}
+                inputSpaceIndices={this.state.tmpArray}
+                sortableIndices={this.state.tmpArray}
+                toggleEnabled={false}
+              />
+            </div>
+          </div>
+          <div
+            className="y-stack"
+            style={{
+              marginLeft: "10px",
+              width: "calc(50% - 20px)",
+              height: "calc(100% - 20px)"
+            }}
+          >
+            <h4 className="title">Transfer From (Detail)</h4>
+            <div
+              style={{
+                height: "calc(100% - 35px)"
+              }}
+            >
+              <DataTable
+                rows={this.state.rows}
+                columns={this.state.columns}
+                editableIndices={this.state.tmpArray}
+                inputSpaceIndices={this.state.tmpArray}
+                sortableIndices={this.state.tmpArray}
+                toggleEnabled={false}
+              />
+            </div>
+          </div>
+        </XStack>
+        <XStack alignToRight={true} style={{ marginTop: "2px" }}>
+          <a className="btn blue wider1">Input Amount</a>
+        </XStack>
 
         {this.state.showingChildScreen && <Modal title="AAAA" />}
       </React.Fragment>
