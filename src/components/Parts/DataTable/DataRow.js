@@ -1,7 +1,7 @@
 import React from "react";
 
 import Cell from "./Cell";
-import { eachWithIndex } from "../../Util";
+import { eachWithIndex } from "../../../Util";
 
 const calcType = (props, cellIndex) => {
   if (props.editableIndex && props.editableIndex.includes(cellIndex)) {

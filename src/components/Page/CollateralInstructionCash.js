@@ -5,7 +5,7 @@ import Modal from "../Parts/Modal";
 import XStack from "../Parts/XStack";
 import FormSelect from "../Parts/Form/FormSelect";
 
-import { getRandomInt } from "../Util";
+import { getRandomInt } from "../../Util";
 
 class CollateralInstructionCash extends PureComponent {
   constructor() {

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { castForEditing, commonGetDerivedStateFromProps } from "../Util";
+import { castForEditing, commonGetDerivedStateFromProps } from "../../../Util";
 import { debounce } from "throttle-debounce";
 
 class InputSpace extends Component {

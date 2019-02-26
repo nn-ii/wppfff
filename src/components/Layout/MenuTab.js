@@ -1,13 +1,12 @@
 import React from "react"; /* needed even when extends some coponent */
 import BaseTab from "../Parts/BaseTab";
 import { Link } from "react-router-dom";
-import { eachWithIndex } from "../Util";
 
 class MenuTab extends BaseTab {
   createMenusTab(linkSettings) {
     return (
       <div className="menus-tab">
-        {eachWithIndex(linkSettings, (linkSetting, idx) => (
+        {linkSettings.map((linkSetting, idx) => (
           <Link
             key={"link" + idx}
             to={linkSetting.to}

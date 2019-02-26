@@ -1,16 +1,18 @@
 import React, { PureComponent } from "react";
 import DataTable from "../Parts/DataTable";
+import FormInput from "../Parts/Form/FormInput";
 import FormSelect from "../Parts/Form/FormSelect";
 import Modal from "../Parts/Modal";
 import ClosableArea from "../Parts/ClosableArea";
-import { toggleState } from "../Util";
 
 import {
   getRandomInt,
+  toggleState,
+  downloadAsCsv,
   retryWithWait,
   withoutPx,
   runWithInterval
-} from "../Util";
+} from "../../Util";
 import axios from "axios";
 
 class AjaxDemo extends PureComponent {
@@ -51,6 +53,7 @@ class AjaxDemo extends PureComponent {
 
     [
       "onSearch",
+      "onCsvDownload",
       "searchFormSecondLayerTypeOnChange",
       "whenEditableAction",
       "whenInputSpaceAction"
@@ -60,6 +63,18 @@ class AjaxDemo extends PureComponent {
 
     /* for testing */
     setTimeout(() => this.debugInsertDataToTable(10), 1);
+  }
+  onCsvDownload() {
+    if (!this.state.dummyFormCsvDownloadCountValid) {
+      return;
+    }
+
+    let data = [];
+    for (let i = 0; i < this.state.dummyFormCsvDownloadCountValue; i++) {
+      data.push([`${i}`, "AAA", "BBB, Ltd", "CCC"]);
+    }
+
+    downloadAsCsv("demo.csv", data);
   }
   onSearch(event) {
     let url =
@@ -168,6 +183,23 @@ class AjaxDemo extends PureComponent {
               onClick={this.onSearch}
             >
               Search
+            </a>
+            <FormInput
+              name="csvDownloadCount"
+              value={this.state.dummyFormCsvDownloadCountValue}
+              setParentStateFunc={this.setStateFunc}
+              parentStateKey="dummyFormCsvDownloadCount"
+              validationFunc={v => /^[0-9]*$/.test(v)}
+              isValid={this.state.dummyFormCsvDownloadCountValid}
+              style={{ marginLeft: "10px" }}
+            />
+
+            <a
+              className="btn blue"
+              style={{ marginLeft: "1px" }}
+              onClick={this.onCsvDownload}
+            >
+              CSV Download Demo
             </a>
           </div>
         </ClosableArea>

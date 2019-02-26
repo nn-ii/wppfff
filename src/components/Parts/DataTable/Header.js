@@ -6,7 +6,7 @@ import {
   nTimes,
   withoutPx,
   retryWithWait
-} from "../../Util";
+} from "../../../Util";
 
 class Header extends Component {
   constructor(props) {

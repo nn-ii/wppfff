@@ -5,7 +5,7 @@ import Modal from "../Parts/Modal";
 import XStack from "../Parts/XStack";
 import XStackLeftRight from "../Parts/XStackLeftRight";
 
-import { getRandomInt } from "../Util";
+import { getRandomInt } from "../../Util";
 
 class CollateralTransfer extends PureComponent {
   constructor() {

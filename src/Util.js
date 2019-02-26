@@ -171,3 +171,40 @@ export const toggleState = (object, key) => {
   toSet[key] = !object.state[key];
   object.setState(toSet);
 };
+
+export const createCsvBlob = rowsArray => {
+  let data = rowsArray
+    .map(values => values.map(val => (val.indexOf(",") < 0 ? val : `"${val}"`)))
+    .join("\n");
+
+  console.log("CSV", data);
+
+  return new Blob([data], {
+    type: window.navigator.msSaveOrOpenBlob
+      ? this.getMimeType()
+      : "octet/stream"
+  });
+};
+
+export const downloadBlob = (fileName, blob) => {
+  console.log("blob", blob);
+  if (window.navigator.msSaveOrOpenBlob) {
+    window.navigator.msSaveOrOpenBlob(blob, fileName);
+  } else {
+    // data URI pattern
+    const element = document.createElement("a");
+    const url = window.URL.createObjectURL(blob);
+    console.log("URL", url);
+    element.setAttribute("href", url);
+    element.setAttribute("download", fileName);
+    element.style.display = "none";
+    document.body.appendChild(element);
+    element.click();
+    window.URL.revokeObjectURL(url);
+    document.body.removeChild(element);
+  }
+};
+
+export const downloadAsCsv = (fileName, rowsArray) => {
+  downloadBlob(fileName, createCsvBlob(rowsArray));
+};

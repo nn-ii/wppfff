@@ -8,7 +8,7 @@ import {
   withoutPx,
   runWithInterval,
   toggleState
-} from "./Util";
+} from "../Util";
 import "../index.scss";
 
 class App extends PureComponent {

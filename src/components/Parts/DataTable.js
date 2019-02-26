@@ -8,7 +8,7 @@ import {
   withoutPx,
   retryWithWait,
   runWithInterval
-} from "../Util";
+} from "../../Util";
 import DataRow from "./DataTable/DataRow";
 import Header from "./DataTable/Header";
 
@@ -352,18 +352,6 @@ class DataTable extends PureComponent {
       if (anyWidthChanged) {
         willBeMerged.headerCellsWidthList = widthList;
       }
-      console.log(
-        "AAAAAAA",
-        widthList,
-        willBeMerged,
-        willBeMerged.headerCellsWidthList &&
-          willBeMerged.headerCellsWidthList.length
-      );
-      console.log(
-        "BBBBBB",
-        JSON.stringify([this.state.headerCellsWidthList, widthList]),
-        this.state.version
-      );
 
       /*
       let dummyRowStyle = document.defaultView.getComputedStyle(dummyRow);

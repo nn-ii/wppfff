@@ -6,7 +6,7 @@ import ClosableArea from "../Parts/ClosableArea";
 import FormInput from "../Parts/Form/FormInput";
 import FormSelect from "../Parts/Form/FormSelect";
 
-import { getRandomInt, toggleState } from "../Util";
+import { getRandomInt, toggleState } from "../../Util";
 
 class CollateralInstructionStatus extends PureComponent {
   constructor() {
